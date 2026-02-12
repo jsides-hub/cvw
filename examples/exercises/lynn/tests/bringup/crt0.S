@@ -104,6 +104,7 @@ finish:
 
     sw   gp, 0(t0)
     sw   x0, 4(t0)
+
 1:
     j    1b
 
