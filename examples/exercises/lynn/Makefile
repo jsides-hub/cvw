@@ -222,7 +222,7 @@ C_test:
 .PHONY: bringup_test
 bringup_test:
 	@$(MAKE) -C $(BRINGUP_TEST_DIR) \
-		XLEN=$(XLEN) ARCH="$(ARCH)" ABI=$(ABI) LINKER=$(LINKER) TOOLPREFIX=$(TOOLPREFIX)
+		XLEN=$(XLEN) ARCH="$(ARCH)" ABI=$(ABI) TOOLPREFIX=$(TOOLPREFIX)
 	@$(MAKE) run ELFS="$(BRINGUP_TEST_DIR)/work/bringup.elf"
 
 # ----  Coremark flow  ---- #
