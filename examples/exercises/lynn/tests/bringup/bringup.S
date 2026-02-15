@@ -15,11 +15,20 @@
 .extern srai_test
 .extern sltu_test
 .extern sltiu_test
+.extern lb_test
+.extern lbu_test
+.extern lh_test
+.extern lhu_test
+.extern sb_test
+.extern sh_test
 .extern bne_test
 .extern blt_test
 .extern bltu_test
 .extern bge_test
 .extern bgeu_test
+.extern jalr_test
+.extern lui_test
+.extern auipc_test
 
     .section .text.init
     .globl main
@@ -35,11 +44,20 @@
     .globl return_srai_test
     .globl return_sltu_test
     .globl return_sltiu_test
+    .globl return_lb_test
+    .globl return_lbu_test
+    .globl return_lh_test
+    .globl return_lhu_test
+    .globl return_sb_test
+    .globl return_sh_test
     .globl return_bne_test
     .globl return_blt_test
     .globl return_bltu_test
     .globl return_bge_test
     .globl return_bgeu_test
+    .globl return_jalr_test
+    .globl return_lui_test
+    .globl return_auipc_test
     .type  main, @function
 
 main:
@@ -79,6 +97,24 @@ return_sltu_test:
     j sltiu_test
 
 return_sltiu_test:
+    j lb_test
+
+return_lb_test:
+    j lbu_test
+
+return_lbu_test:
+    j lh_test
+
+return_lh_test:
+    j lhu_test
+
+return_lhu_test:
+    j sb_test
+
+return_sb_test:
+    j sh_test
+
+return_sh_test:
     j bne_test
 
 return_bne_test:
@@ -94,4 +130,13 @@ return_bge_test:
     j bgeu_test
 
 return_bgeu_test:
+    j jalr_test
+
+return_jalr_test:
+    j lui_test
+
+return_lui_test:
+    j auipc_test
+
+return_auipc_test:
     j pass
