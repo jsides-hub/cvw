@@ -8,7 +8,7 @@ module datapath(
         input   logic           ALUResultSrc, ResultSrc,
         input   logic [1:0]     ALUSrc,
         input   logic           RegWrite,
-        input   logic [1:0]     ImmSrc,
+        input   logic [2:0]     ImmSrc,
         input   logic [1:0]     ALUControl,
         output  logic           Eq,
         input   logic [31:0]    PC, PCPlus4,

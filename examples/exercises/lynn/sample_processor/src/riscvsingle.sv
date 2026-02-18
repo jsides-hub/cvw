@@ -17,7 +17,7 @@ module riscvsingle (
 
         output  logic           MemEn,
         output  logic           WriteEn,
-        output  logic [3:0]     WriteByteEn  // strobes, 1 hot stating weather a byte should be written on a store
+        output  logic [3:0]     WriteByteEn  // strobes, 1 hot stating whether a byte should be written on a store
     );
 
     logic [31:0] PCPlus4;

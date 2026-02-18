@@ -97,9 +97,7 @@ return_sltu_test:
     j sltiu_test
 
 return_sltiu_test:
-    j lb_test
 
-return_lb_test:
     j lbu_test
 
 return_lbu_test:

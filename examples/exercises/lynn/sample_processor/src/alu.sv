@@ -9,7 +9,7 @@ module alu(
         output  logic [31:0]    ALUResult, IEUAdr
     );
 
-    logic [31:0] CondInvb, Sum, SLT;
+    logic [31:0] CondInvb, Sum, SLT, SLTU, Right;
     logic ALUOp, Sub, Overflow, Neg, LT;
     logic [2:0] ALUFunct;
 
@@ -25,12 +25,18 @@ module alu(
     assign Neg = Sum[31];
     assign LT = Neg ^ Overflow;
     assign SLT = {31'b0, LT};
+    assign SLTU = SLT; // TODO : implement SLTU
     assign ALUFunct = Funct3 & {3{ALUOp}}; // Force ALUFunct to 0 to Add when ALUOp = 0
+    assign Right = Sub ? SrcA >>> SrcB : SrcA >> SrcB;
 
     always_comb begin
         case (ALUFunct)
             3'b000: ALUResult = Sum; // add or sub
+            3'b001: ALUResult = SrcA << SrcB; // sll
             3'b010: ALUResult = SLT; // slt
+            3'b011: ALUResult = SLTU; // sltu
+            3'b100: ALUResult = SrcA ^ SrcB; // xor
+            3'b101: ALUResult = SrcA; // srl or sra
             3'b110: ALUResult = SrcA | SrcB; // or
             3'b111: ALUResult = SrcA & SrcB; // and
             default: ALUResult = 'x;
