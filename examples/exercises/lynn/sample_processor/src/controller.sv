@@ -58,7 +58,7 @@ module controller(
         ResultSrc, Branch, Jump, MemEn} = controls;
 
     // ALU Control Logic
-    assign Sub = ALUOp & ((Funct3 == 3'b000) & Funct7b5 & Op[5] | (Funct3 == 3'b010)); // subtract or SLT TODO: add sra
+    assign Sub = (ALUOp & (((Funct3 == 3'b000) & Funct7b5 & Op[5]) | ((Funct3 == 3'b101) & Funct7b5)|(Funct3 == 3'b010) | (Funct3 == 3'b011))); // subtract or SLT TODO: add sra
     assign ALUControl = {Sub, ALUOp};
 
     // PCSrc logic
