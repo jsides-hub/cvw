@@ -15,8 +15,8 @@ module ieu(
         output  logic           MemEn
     );
 
-    logic RegWrite, Jump, Eq, ALUResultSrc, ResultSrc;
-    logic [1:0] ALUSrc;
+    logic RegWrite, Jump, Eq, ALUResultSrc;
+    logic [1:0] ALUSrc, ResultSrc;
     logic [2:0] ImmSrc;
     logic [1:0] ALUControl;
 

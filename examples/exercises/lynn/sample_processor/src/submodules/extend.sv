@@ -20,6 +20,8 @@ module extend(
             3'b011: ImmExt = {{12{Instr[31]}}, Instr[19:12], Instr[20], Instr[30:21], 1'b0};
             // U-type (auipc, lui)
             3'b100: ImmExt = {Instr[31:12], {12{1'b0}}};
+            // I-type uimm
+            3'b101: ImmExt = {{27{1'b0}}, Instr[24:20]};
             default: ImmExt = 32'bx; // undefined
         endcase
     end
