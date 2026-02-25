@@ -12,8 +12,8 @@
 
 srl_test:
     test1:
-        li   t0, 4050
-        li   t1, 6
+        li   t0, 2025
+        li   t1, 5
         srl t2, t0, t1
         li   t3, 63
         beq  t2, t3, test2
@@ -28,8 +28,8 @@ srl_test:
         j Fail_Srl_2
 
     test3:
-        li   t0, 3488
-        li   t1, 9
+        li   t0, 1744
+        li   t1, 8
         srl t2, t0, t1
         li   t3, 6
         beq  t2, t3, test4
@@ -76,16 +76,16 @@ srl_test:
         j Fail_Srl_8
 
     test9:
-        li   t0, 2683
-        li   t1, 4
+        li   t0, 1341
+        li   t1, 3
         srl t2, t0, t1
         li   t3, 167
         beq  t2, t3, test10
         j Fail_Srl_9
 
     test10:
-        li   t0, 2327
-        li   t1, 1
+        li   t0, 1163
+        li   t1, 0
         srl t2, t0, t1
         li   t3, 1163
         beq  t2, t3, pass

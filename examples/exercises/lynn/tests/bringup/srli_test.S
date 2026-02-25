@@ -19,15 +19,15 @@ srli_test:
         j Fail_Srli_1
 
     test2:
-        li   t0, 3466
-        srli t2, t0, 7
+        li   t0, 1733
+        srli t2, t0, 6
         li   t3, 27
         beq  t2, t3, test3
         j Fail_Srli_2
 
     test3:
-        li   t0, 3831
-        srli t2, t0, 8
+        li   t0, 1915
+        srli t2, t0, 7
         li   t3, 14
         beq  t2, t3, test4
         j Fail_Srli_3
@@ -40,22 +40,22 @@ srli_test:
         j Fail_Srli_4
 
     test5:
-        li   t0, 3497
-        srli t2, t0, 9
+        li   t0, 1748
+        srli t2, t0, 8
         li   t3, 6
         beq  t2, t3, test6
         j Fail_Srli_5
 
     test6:
-        li   t0, 3492
-        srli t2, t0, 9
+        li   t0, 1746
+        srli t2, t0, 8
         li   t3, 6
         beq  t2, t3, test7
         j Fail_Srli_6
 
     test7:
-        li   t0, 2791
-        srli t2, t0, 8
+        li   t0, 1395
+        srli t2, t0, 7
         li   t3, 10
         beq  t2, t3, test8
         j Fail_Srli_7
@@ -75,8 +75,8 @@ srli_test:
         j Fail_Srli_9
 
     test10:
-        li   t0, 3587
-        srli t2, t0, 1
+        li   t0, 1793
+        srli t2, t0, 0
         li   t3, 1793
         beq  t2, t3, pass
         j Fail_Srli_10
