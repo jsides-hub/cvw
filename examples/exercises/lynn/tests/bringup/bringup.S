@@ -61,39 +61,15 @@
     .type  main, @function
 
 main:
-    j pass
-
-
-    j lb_test
-
-return_lb_test:
-    j lbu_test
-
-return_lbu_test:
-    j lh_test
-
-return_lh_test:
-    j lhu_test
-
-return_lhu_test:
-    j sb_test
-
-return_sb_test:
-    j sh_test
-
-return_sh_test:
-
-
-
-    j add_test
-
-return_add_test:
     j or_test
 
 return_or_test:
     j and_test
 
 return_and_test:
+    j add_test
+
+return_add_test:
     j sub_test
 
 return_sub_test:
@@ -121,12 +97,24 @@ return_sltu_test:
     j sltiu_test
 
 return_sltiu_test:
-    j lui_test
+    j lb_test
 
-return_lui_test:
-    j auipc_test
+return_lb_test:
+    j lbu_test
 
-return_auipc_test:
+return_lbu_test:
+    j lh_test
+
+return_lh_test:
+    j lhu_test
+
+return_lhu_test:
+    j sb_test
+
+return_sb_test:
+    j sh_test
+
+return_sh_test:
     j bne_test
 
 return_bne_test:
@@ -145,3 +133,10 @@ return_bgeu_test:
     j jalr_test
 
 return_jalr_test:
+    j lui_test
+
+return_lui_test:
+    j auipc_test
+
+return_auipc_test:
+    j pass

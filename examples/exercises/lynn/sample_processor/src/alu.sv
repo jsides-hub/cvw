@@ -14,6 +14,7 @@ module alu(
     logic [31:0] CondInvb, Sum, SLT, SLTU, Right;
     logic ALUOp, Sub, Overflow, Neg, LT;
     logic [2:0] ALUFunct;
+    logic [31:0] SignedShift, UnsignedShift;
 
     assign {Sub, ALUOp} = ALUControl;
 
@@ -29,7 +30,10 @@ module alu(
     assign LTU = Neg;
     assign SLT = {31'b0, LT};
     assign SLTU = {31'b0, LTU};
-    assign Right = Sub ? (SrcA >>> SrcB) : (SrcA >> SrcB);
+
+    assign SignedShift = $signed(SrcA) >>> SrcB;
+    assign UnsignedShift = SrcA >> SrcB;
+    assign Right = Sub ? SignedShift : UnsignedShift;
     assign ALUFunct = Funct3 & {3{ALUOp}}; // Force ALUFunct to 0 to Add when ALUOp = 0
 
     always_comb begin

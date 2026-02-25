@@ -43,7 +43,7 @@ module controller(
             7'b1101111:         controls = 14'b1_011_11_0_1_0_00_0_1_0; // jal
             7'b0010111:         controls = 14'b1_100_11_0_0_0_00_0_0_0; // auipc
             7'b0110111:         controls = 14'b1_100_01_0_0_0_10_0_0_0; // lui
-            7'b1100111:         controls = 14'b1_000_01_x_1_x_00_0_1_0; // jalr TODO: add control signals
+            7'b1100111:         controls = 14'b1_000_01_0_1_0_00_0_1_0; // jalr
             default: begin
                 `ifdef DEBUG
                     controls = 14'bx_xx_xx_x_x_x_x_x_x_x; // non-implemented instruction
@@ -68,12 +68,6 @@ module controller(
     assign PCSrc = Branch & (!Funct3[0] == ((Eq & (Funct3[2:1] == 2'b00)) | (Lt & (Funct3[2:1] == 2'b10)) | (Ltu & (Funct3[2:1] == 2'b11)))) | Jump;
 
 
-
-
-
-
-    //beq: 000, bne: 001, blt: 100, bge: 101, bltu: 110, bgeu: 111
-
     // MemWrite logic
     always_comb
         case(Funct3)
@@ -82,4 +76,5 @@ module controller(
             2: WriteByteEn = {4{MemWrite}} & 4'b1111; // sw
             default: WriteByteEn = 4'b0000;
         endcase
+
 endmodule

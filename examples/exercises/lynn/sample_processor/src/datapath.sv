@@ -20,9 +20,11 @@ module datapath(
         input   logic [31:0]    ReadData
     );
 
-    logic [31:0] ImmExt;
+    logic [31:0] ImmExt, ReadExt;
     logic [31:0] R1, R2, SrcA, SrcB;
     logic [31:0] ALUResult, IEUResult, Result;
+
+    readextend re(ReadData, Funct3, ReadExt);
 
     // register file logic
     regfile rf(.clk, .WE3(RegWrite), .A1(Instr[19:15]), .A2(Instr[24:20]),
@@ -39,7 +41,7 @@ module datapath(
     alu alu(.SrcA, .SrcB, .ALUControl, .Funct3, .ALUResult, .IEUAdr);
 
     mux2 #(32) ieuresultmux(ALUResult, PCPlus4, ALUResultSrc, IEUResult);
-    mux4 #(32) resultmux(IEUResult, ReadData, ImmExt, 'x, ResultSrc, Result);
+    mux4 #(32) resultmux(IEUResult, ReadExt, ImmExt, 'x, ResultSrc, Result);
 
     assign WriteData = R2;
 endmodule
