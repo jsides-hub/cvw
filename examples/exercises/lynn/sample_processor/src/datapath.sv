@@ -5,6 +5,7 @@
 module datapath(
         input   logic           clk, reset,
         input   logic [2:0]     Funct3,
+        input   logic [3:0]     WriteByteEn,
         input   logic           ALUResultSrc,
         input   logic [1:0]     ResultSrc,
         input   logic [1:0]     ALUSrc,
@@ -23,7 +24,7 @@ module datapath(
     logic [31:0] ALUResult, IEUResult, Result;
 
     // register file logic
-    regfile rf(.clk, .WE3(RegWrite), .A1(Instr[19:15]), .A2(Instr[24:20]),
+    regfile rf(.clk, .WriteByteEn, .WE3(RegWrite), .A1(Instr[19:15]), .A2(Instr[24:20]),
         .A3(Instr[11:7]), .WD3(Result), .RD1(R1), .RD2(R2));
 
     extend ext(.Instr(Instr[31:7]), .ImmSrc, .ImmExt);

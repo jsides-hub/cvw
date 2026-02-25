@@ -4,6 +4,7 @@
 
 module regfile(
         input   logic           clk,
+        input   logic[3:0]      WriteByteEn,
         input   logic           WE3,
         input   logic [4:0]     A1, A2, A3,
         input   logic [31:0]    WD3,
@@ -16,6 +17,7 @@ module regfile(
     // read two ports combinationally (A1/RD1, A2/RD2)
     // write third port on rising edge of clock (A3/WD3/WE3)
     // register 0 hardwired to 0
+    // TODO: add conditionals for bytes to write
     always_ff @(posedge clk)
         if (WE3) rf[A3] <= WD3;
 

@@ -20,7 +20,7 @@ module ieu(
     logic [2:0] ImmSrc;
     logic [1:0] ALUControl;
 
-    controller c(.Op(Instr[6:0]), .Funct3(Instr[14:12]), .Funct7b5(Instr[30]), .Eq,
+    controller c(.Op(Instr[6:0]), .Funct3(Instr[14:12]), .WriteByteEn, .Funct7b5(Instr[30]), .Eq,
         .ALUResultSrc, .ResultSrc, .WriteByteEn, .PCSrc,
         .ALUSrc, .RegWrite, .ImmSrc, .ALUControl, .MemEn
     `ifdef DEBUG
