@@ -7,6 +7,8 @@
 module controller(
         input   logic [6:0]   Op,
         input   logic         Eq,
+        input   logic         Lt,
+        input   logic         Ltu,
         input   logic [2:0]   Funct3,
         input   logic         Funct7b5,
         output  logic         ALUResultSrc,
@@ -63,7 +65,14 @@ module controller(
     assign ALUControl = {Sub, ALUOp};
 
     // PCSrc logic
-    assign PCSrc = Branch & Eq | Jump;
+    assign PCSrc = Branch & (!Funct3[0] == ((Eq & (Funct3[2:1] == 2'b00)) | (Lt & (Funct3[2:1] == 2'b10)) | (Ltu & (Funct3[2:1] == 2'b11)))) | Jump;
+
+
+
+
+
+
+    //beq: 000, bne: 001, blt: 100, bge: 101, bltu: 110, bgeu: 111
 
     // MemWrite logic
     always_comb

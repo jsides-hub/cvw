@@ -12,6 +12,8 @@ module datapath(
         input   logic [2:0]     ImmSrc,
         input   logic [1:0]     ALUControl,
         output  logic           Eq,
+        output  logic           Lt,
+        output  logic           Ltu,
         input   logic [31:0]    PC, PCPlus4,
         input   logic [31:0]    Instr,
         output  logic [31:0]    IEUAdr, WriteData,
@@ -29,7 +31,7 @@ module datapath(
     extend ext(.Instr(Instr[31:7]), .ImmSrc, .ImmExt);
 
     // ALU logic
-    cmp cmp(.R1, .R2, .Eq);
+    cmp cmp(.R1, .R2, .Eq, .Lt, .Ltu);
 
     mux2 #(32) srcamux(R1, PC, ALUSrc[1], SrcA);
     mux2 #(32) srcbmux(R2, ImmExt, ALUSrc[0], SrcB);
