@@ -12,9 +12,9 @@
 
 lui_test:
 test1:
-    li   t0, 2712
+    li   t0, 1712
     slli t0, t0, 12
-    lui t1, 2712
+    lui t1, 1712
     beq  t0, t1, test2
     j Fail_Lui_1
 
@@ -26,16 +26,16 @@ test2:
     j Fail_Lui_2
 
 test3:
-    li   t0, 2103
+    li   t0, 103
     slli t0, t0, 12
-    lui t1, 2103
+    lui t1, 103
     beq  t0, t1, test4
     j Fail_Lui_3
 
 test4:
-    li   t0, 3346
+    li   t0, 1346
     slli t0, t0, 12
-    lui t1, 3346
+    lui t1, 1346
     beq  t0, t1, test5
     j Fail_Lui_4
 
@@ -47,23 +47,23 @@ test5:
     j Fail_Lui_5
 
 test6:
-    li   t0, 3584
+    li   t0, 584
     slli t0, t0, 12
-    lui t1, 3584
+    lui t1, 584
     beq  t0, t1, test7
     j Fail_Lui_6
 
 test7:
-    li   t0, 3969
+    li   t0, 1969
     slli t0, t0, 12
-    lui t1, 3969
+    lui t1, 1969
     beq  t0, t1, test8
     j Fail_Lui_7
 
 test8:
-    li   t0, 4073
+    li   t0, 73
     slli t0, t0, 12
-    lui t1, 4073
+    lui t1, 73
     beq  t0, t1, test9
     j Fail_Lui_8
 

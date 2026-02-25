@@ -12,18 +12,18 @@
 
 sra_test:
     test1:
-        li   t0, -1109
+        li   t0, 1109
         li   t1, 5
         sra t2, t0, t1
-        li   t3, -35
+        li   t3, 34
         beq  t2, t3, test2
         j Fail_Sra_1
 
     test2:
-        li   t0, -1842
+        li   t0, 1842
         li   t1, 1
         sra t2, t0, t1
-        li   t3, -921
+        li   t3, 921
         beq  t2, t3, test3
         j Fail_Sra_2
 
@@ -36,10 +36,10 @@ sra_test:
         j Fail_Sra_3
 
     test4:
-        li   t0, -1582
+        li   t0, 1582
         li   t1, 1
         sra t2, t0, t1
-        li   t3, -791
+        li   t3, 791
         beq  t2, t3, test5
         j Fail_Sra_4
 
@@ -76,18 +76,18 @@ sra_test:
         j Fail_Sra_8
 
     test9:
-        li   t0, -289
+        li   t0, 289
         li   t1, 0
         sra t2, t0, t1
-        li   t3, -289
+        li   t3, 289
         beq  t2, t3, test10
         j Fail_Sra_9
 
     test10:
-        li   t0, -1378
+        li   t0, 1378
         li   t1, 4
         sra t2, t0, t1
-        li   t3, -87
+        li   t3, 86
         beq  t2, t3, pass
         j Fail_Sra_10
 

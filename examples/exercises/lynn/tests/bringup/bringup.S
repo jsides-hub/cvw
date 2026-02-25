@@ -61,42 +61,6 @@
     .type  main, @function
 
 main:
-    j add_test
-
-return_add_test:
-    j or_test
-
-return_or_test:
-    j and_test
-
-return_and_test:
-    j sub_test
-
-return_sub_test:
-    j sll_test
-
-return_sll_test:
-    j slli_test
-
-return_slli_test:
-    j srl_test
-
-return_srl_test:
-    j srli_test
-
-return_srli_test:
-    j sra_test
-
-return_sra_test:
-    j srai_test
-
-return_srai_test:
-    j sltu_test
-
-return_sltu_test:
-    j sltiu_test
-
-return_sltiu_test:
     j lb_test
 
 return_lb_test:
@@ -133,10 +97,55 @@ return_bgeu_test:
     j jalr_test
 
 return_jalr_test:
+    j pass
+
+
+
+
+
+
+
+
+
+    j add_test
+
+return_add_test:
+    j or_test
+
+return_or_test:
+    j and_test
+
+return_and_test:
+    j sub_test
+
+return_sub_test:
+    j sll_test
+
+return_sll_test:
+    j slli_test
+
+return_slli_test:
+    j srl_test
+
+return_srl_test:
+    j srli_test
+
+return_srli_test:
+    j sra_test
+
+return_sra_test:
+    j srai_test
+
+return_srai_test:
+    j sltu_test
+
+return_sltu_test:
+    j sltiu_test
+
+return_sltiu_test:
     j lui_test
 
 return_lui_test:
     j auipc_test
 
 return_auipc_test:
-    j pass

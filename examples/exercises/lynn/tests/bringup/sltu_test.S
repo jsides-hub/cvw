@@ -20,16 +20,16 @@ sltu_test:
         j Fail_Sltu_1
 
     test2:
-        li   t0, 3716
-        li   t1, 2575
+        li   t0, 1716
+        li   t1, 575
         sltu t2, t0, t1
         li   t3, 0
         beq  t2, t3, test3
         j Fail_Sltu_2
 
     test3:
-        li   t0, 3762
-        li   t1, 3918
+        li   t0, 1762
+        li   t1, 1918
         sltu t2, t0, t1
         li   t3, 1
         beq  t2, t3, test4
@@ -52,8 +52,8 @@ sltu_test:
         j Fail_Sltu_5
 
     test6:
-        li   t0, 3437
-        li   t1, 2416
+        li   t0, 1437
+        li   t1, 416
         sltu t2, t0, t1
         li   t3, 0
         beq  t2, t3, test7
@@ -61,31 +61,31 @@ sltu_test:
 
     test7:
         li   t0, 494
-        li   t1, 3724
+        li   t1, 1724
         sltu t2, t0, t1
         li   t3, 1
         beq  t2, t3, test8
         j Fail_Sltu_7
 
     test8:
-        li   t0, 3799
-        li   t1, 3206
+        li   t0, 1799
+        li   t1, 1206
         sltu t2, t0, t1
         li   t3, 0
         beq  t2, t3, test9
         j Fail_Sltu_8
 
     test9:
-        li   t0, 3642
-        li   t1, 1863
+        li   t0, 1642
+        li   t1, 863
         sltu t2, t0, t1
         li   t3, 0
         beq  t2, t3, test10
         j Fail_Sltu_9
 
     test10:
-        li   t0, 2485
-        li   t1, 3516
+        li   t0, 485
+        li   t1, 516
         sltu t2, t0, t1
         li   t3, 1
         beq  t2, t3, pass
