@@ -26,7 +26,7 @@ module alu(
     assign Overflow = (SrcA[31] ^ SrcB[31]) & (SrcA[31] ^ Sum[31]);
     assign Neg = Sum[31];
     assign LT = Neg ^ Overflow;
-    assign LTU = Overflow;
+    assign LTU = Neg;
     assign SLT = {31'b0, LT};
     assign SLTU = {31'b0, LTU};
     assign Right = Sub ? (SrcA >>> SrcB) : (SrcA >> SrcB);
