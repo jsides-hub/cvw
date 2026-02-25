@@ -10,8 +10,9 @@ SYNTH_TECH 		?= sky130
 PROCESSOR_DIR   ?= $(CURDIR)/sample_processor/src
 INC_DIR       	?= $(CURDIR)/sample_processor/incdir
 
-SYNTH_TOP 		?= synth_top
-SYNTH_FILE 		?= $(CURDIR)/synth_top.sv
+SYNTH_TOP 		?= riscvsingle
+SYNTH_FILES 	?=
+LIB_FILES 		?=
 
 PROCESSOR_TOP 	?= riscvsingle
 
