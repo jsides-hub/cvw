@@ -12,7 +12,7 @@
 
 blt_test:
 test1:
-    li   t0, -326
+    li   t0, 26
     li   t1, 179
     blt  t0, t1, test2
     j Fail_Blt_1
