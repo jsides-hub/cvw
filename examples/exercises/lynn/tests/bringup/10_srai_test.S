@@ -12,9 +12,9 @@
 
 srai_test:
 test1:
-    li   t0, 250
-    srai t2, t0, 5
-    li   t3, 7
+    li   t0, -2
+    srai t2, t0, 1
+    li   t3, -1
     beq  t2, t3, test2
     j Fail_Srai_1
 
