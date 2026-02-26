@@ -37,8 +37,8 @@ module controller(
             7'b0000011:         controls = 14'b1_000_01_0_0_0_01_0_0_1; // I-type load
             7'b0100011:         controls = 14'b0_001_01_0_0_1_00_0_0_1; // S-type
             7'b0110011:         controls = 14'b1_xxx_00_1_0_0_00_0_0_0; // R-type
-            7'b0010011: if (Funct3[1:0] == 2'b01)   controls = 14'b1_101_01_1_0_0_00_0_0_0; // I-type ALU
-                        else    controls = 14'b1_000_01_1_0_0_00_0_0_0; // I-type ALU uimm
+            7'b0010011: if (Funct3[1:0] == 2'b01)   controls = 14'b1_101_01_1_0_0_00_0_0_0; // I-type ALU uimm
+                        else    controls = 14'b1_000_01_1_0_0_00_0_0_0; // I-type ALU
             7'b1100011:         controls = 14'b0_010_11_0_0_0_00_1_0_0; // B-type
             7'b1101111:         controls = 14'b1_011_11_0_1_0_00_0_1_0; // jal
             7'b0010111:         controls = 14'b1_100_11_0_0_0_00_0_0_0; // auipc
