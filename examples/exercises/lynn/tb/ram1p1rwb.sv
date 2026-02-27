@@ -15,10 +15,13 @@ module ram1p1rwb #(
 
     input   logic                       En,
     input   logic                       WriteEn,
+
     input   logic[(DATA_BITS/8)-1:0]    WriteByteEn,
 
     input   logic[ADDRESS_BITS-1:0]     MemoryAddress,
     input   logic[DATA_BITS-1:0]        WriteData,
+
+    input  logic[2:0]                  Funct3,
 
     output  logic[DATA_BITS-1:0]        ReadData
 );
@@ -29,6 +32,7 @@ module ram1p1rwb #(
 
     logic[DATA_BITS-1:0] Memory[MEMORY_SIZE_ENTRIES-1:0];
 
+    // TODO: update for partial reads
     assign ReadData = En ? Memory[(MemoryAddress-MEMORY_ADR_OFFSET)>>2] : 'x;
 
     always_ff @(negedge clk) begin
@@ -54,14 +58,15 @@ module ram1p1rwb #(
 
         end else if (WriteEn && En) begin
             logic[DATA_BITS-1:0] LocalReadData;
-
+            logic[1:0] BytesWritten;
+            BytesWritten = 0;
             LocalReadData = Memory[(MemoryAddress-MEMORY_ADR_OFFSET)>>2];
 
-            //$display("%s Writing to local adr: %h, Write Data: %h, byte en: %b", MEMORY_NAME, (MemoryAddress-MEMORY_ADR_OFFSET)>>2, WriteData, WriteByteEn);
-
+            $display("%s Writing to local adr: %h, Write Data: %h, byte en: %b", MEMORY_NAME, (MemoryAddress-MEMORY_ADR_OFFSET)>>2, WriteData, WriteByteEn);
             for (int i = 0; i < (DATA_BITS/8); i++) begin
                 if (WriteByteEn[i]) begin
-                    LocalReadData[((i+1)*8-1) -: 8] = WriteData[((i+1)*8-1) -: 8];
+                    LocalReadData[((i+1)*8-1) -: 8] = WriteData[((BytesWritten+1)*8-1) -: 8];
+                    BytesWritten++;
                 end
             end
 
