@@ -6,11 +6,12 @@
 
 module controller(
         input   logic [6:0]   Op,
+        input   logic [2:0]   Funct3,
+        input   logic         Funct7b5,
+        input   logic [1:0]   Mod,
         input   logic         Eq,
         input   logic         Lt,
         input   logic         Ltu,
-        input   logic [2:0]   Funct3,
-        input   logic         Funct7b5,
         output  logic         ALUResultSrc,
         output  logic [1:0]   ResultSrc,
         output  logic [3:0]   WriteByteEn,
@@ -69,12 +70,14 @@ module controller(
 
 
     // MemWrite logic
+
     always_comb
         case(Funct3)
-            0: WriteByteEn = {4{MemWrite}} & 4'b0001; // sb
-            1: WriteByteEn = {4{MemWrite}} & 4'b0011; // sh
+            0: WriteByteEn = {4{MemWrite}} & (4'b0001 << Mod); // sb
+            1: WriteByteEn = {4{MemWrite}} & (Mod[1] ? 4'b1100 : 4'b0011); // sh
             2: WriteByteEn = {4{MemWrite}} & 4'b1111; // sw
             default: WriteByteEn = 4'b0000;
         endcase
+
 
 endmodule
