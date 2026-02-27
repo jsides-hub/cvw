@@ -32,8 +32,21 @@ module ram1p1rwb #(
 
     logic[DATA_BITS-1:0] Memory[MEMORY_SIZE_ENTRIES-1:0];
 
-    // TODO: update for partial reads
-    assign ReadData = En ? Memory[(MemoryAddress-MEMORY_ADR_OFFSET)>>2] : 'x;
+    logic [31:0] Mem;
+    logic [1:0] ModRead;
+
+    assign ModRead = (MemoryAddress-MEMORY_ADR_OFFSET)%4;
+    assign Mem = Memory[(MemoryAddress-MEMORY_ADR_OFFSET)>>2] >> (8 * ModRead);
+
+    always_comb
+        case(Funct3)
+            0: ReadData = En ? {{24{1'b0}}, Mem[7:0]} : 'x; // lb
+            1: ReadData = En ? {{16{1'b0}}, Mem[15:0]} : 'x; // lh
+            2: ReadData = En ? Mem : 'x; // lw
+            4: ReadData = En ? {{25{Mem[7]}}, Mem[6:0]} : 'x; // lbu
+            5: ReadData = En ? {{17{Mem[15]}}, Mem[14:0]} : 'x; // lhu
+            default: ReadData = 'x;
+        endcase
 
     always_ff @(negedge clk) begin
         //$display("%s En: %h WriteEn: %h Addr: %h ReadData: %h", MEMORY_NAME, En, WriteEn, MemoryAddress, ReadData);
