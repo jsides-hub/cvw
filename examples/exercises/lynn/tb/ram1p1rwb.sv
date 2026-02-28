@@ -40,11 +40,11 @@ module ram1p1rwb #(
 
     always_comb
         case(Funct3)
-            0: ReadData = En ? {{24{1'b0}}, Mem[7:0]} : 'x; // lb
-            1: ReadData = En ? {{16{1'b0}}, Mem[15:0]} : 'x; // lh
+            0: ReadData = En ? {{25{Mem[7]}}, Mem[6:0]} : 'x; // lb
+            1: ReadData = En ? {{17{Mem[15]}}, Mem[14:0]} : 'x; // lh
             2: ReadData = En ? Mem : 'x; // lw
-            4: ReadData = En ? {{25{Mem[7]}}, Mem[6:0]} : 'x; // lbu
-            5: ReadData = En ? {{17{Mem[15]}}, Mem[14:0]} : 'x; // lhu
+            4: ReadData = En ? {{24{1'b0}}, Mem[7:0]} : 'x; // lbu
+            5: ReadData = En ? {{16{1'b0}}, Mem[15:0]} : 'x; // lhu
             default: ReadData = 'x;
         endcase
 

@@ -26,20 +26,21 @@ module alu(
     // Set less than based on subtraction result
     assign Overflow = (SrcA[31] ^ SrcB[31]) & (SrcA[31] ^ Sum[31]);
     assign Neg = Sum[31];
+
     assign LT = Neg ^ Overflow;
-    assign LTU = Neg;
+    assign LTU = (SrcA < SrcB);
     assign SLT = {31'b0, LT};
     assign SLTU = {31'b0, LTU};
 
-    assign SignedShift = $signed(SrcA) >>> SrcB;
-    assign UnsignedShift = SrcA >> SrcB;
+    assign SignedShift = $signed(SrcA) >>> SrcB[4:0];
+    assign UnsignedShift = SrcA >> SrcB[4:0];
     assign Right = Sub ? SignedShift : UnsignedShift;
     assign ALUFunct = Funct3 & {3{ALUOp}}; // Force ALUFunct to 0 to Add when ALUOp = 0
 
     always_comb begin
         case (ALUFunct)
             3'b000: ALUResult = Sum; // add or sub
-            3'b001: ALUResult = SrcA << SrcB; // sll
+            3'b001: ALUResult = SrcA << SrcB[4:0]; // sll
             3'b010: ALUResult = SLT; // slt
             3'b011: ALUResult = SLTU; // sltu
             3'b100: ALUResult = SrcA ^ SrcB; // xor
