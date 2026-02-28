@@ -14,10 +14,8 @@ sb_test:
 test1:
     addi sp, sp, -4
     li   t0, 83
-    sll  t0, t0, 24
-    srl  t0, t0, 24
-    sb t0, 0(sp)
-    lw t1, 0(sp)
+    sb t0, 4(sp)
+    lw t1, 4(sp)
     sll  t1, t1, 24
     srl  t1, t1, 24
     addi sp, sp, 4
@@ -26,12 +24,10 @@ test1:
 
 test2:
     addi sp, sp, -4
-    li   t0, -1556
-    sll  t0, t0, 24
-    srl  t0, t0, 24
-    sb t0, 0(sp)
-    lw t1, 0(sp)
-    sll  t1, t1, 24
+    li   t0, 56
+    sb t0, 5(sp)
+    lw t1, 4(sp)
+    sll  t1, t1, 16
     srl  t1, t1, 24
     addi sp, sp, 4
     beq  t0, t1, test3
@@ -39,12 +35,10 @@ test2:
 
 test3:
     addi sp, sp, -4
-    li   t0, -583
-    sll  t0, t0, 24
-    srl  t0, t0, 24
-    sb t0, 0(sp)
-    lw t1, 0(sp)
-    sll  t1, t1, 24
+    li   t0, 26
+    sb t0, 6(sp)
+    lw t1, 4(sp)
+    sll  t1, t1, 8
     srl  t1, t1, 24
     addi sp, sp, 4
     beq  t0, t1, test4
@@ -52,13 +46,10 @@ test3:
 
 test4:
     addi sp, sp, -4
-    li   t0, -126
-    sll  t0, t0, 24
-    srl  t0, t0, 24
-    sb t0, 0(sp)
-    lw t1, 0(sp)
-    sll  t1, t1, 24
-    srl  t1, t1, 24
+    li   t0, 102
+    sb t0, 7(sp)
+    lw t1, 4(sp)
+    srli  t1, t1, 24
     addi sp, sp, 4
     beq  t0, t1, test5
     j Fail_Sb_4

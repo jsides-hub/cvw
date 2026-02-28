@@ -12,8 +12,8 @@
 
 sltu_test:
     test1:
-        li   t0, 3277
-        li   t1, 2163
+        li   t0, 0xFFFFFFFF
+        li   t1, 0x0FFFFFFF
         sltu t2, t0, t1
         li   t3, 0
         beq  t2, t3, test2
