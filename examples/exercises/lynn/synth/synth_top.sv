@@ -39,8 +39,7 @@ module synth_top (
         .MEMORY_FILE_BASE_ADDRESS (`ELF_BASE_ADR),
         .MEMORY_ADR_OFFSET        (`IMEM_BASE_ADR),
         .MEMFILE_PLUS_ARG         ("MEMFILE")
-    ) InstructionMemory (.clk, .reset, .En(1'b1), .WriteEn(1'b0), .WriteByteEn(4'b0), .MemoryAddress(PC), .WriteData(), .ReadData(Instr));
-
+    ) InstructionMemory (.clk, .reset, .En(1'b1), .WriteEn(1'b0), .WriteByteEn(4'b0), .MemoryAddress(PC), .WriteData(),  .Funct3(3'b010),.ReadData(Instr));
     ram1p1rwb #(
         .MEMORY_NAME              ("Data Memory"),
         .ADDRESS_BITS             (`XLEN),
@@ -49,8 +48,7 @@ module synth_top (
         .MEMORY_FILE_BASE_ADDRESS (`ELF_BASE_ADR),
         .MEMORY_ADR_OFFSET        (`DMEM_BASE_ADR),
         .MEMFILE_PLUS_ARG         ("MEMFILE")
-    ) DataMemory (.clk, .reset, .En(MemEn), .WriteEn, .WriteByteEn, .MemoryAddress(DataAdr), .WriteData, .ReadData(MemReadData));
-
+    ) DataMemory (.clk, .reset, .En(MemEn), .WriteEn, .WriteByteEn, .MemoryAddress(DataAdr), .WriteData, .Funct3, .ReadData(MemReadData));
     // ------------------------------------------------------------
     // DUT instantiation
     // ------------------------------------------------------------
@@ -69,7 +67,8 @@ module synth_top (
         .WriteData      (WriteData),
         .MemEn          (MemEn),
         .WriteEn        (WriteEn),
-        .WriteByteEn    (WriteByteEn)
+        .WriteByteEn    (WriteByteEn),
+        .Funct3         (Funct3)
     );
 
 endmodule
