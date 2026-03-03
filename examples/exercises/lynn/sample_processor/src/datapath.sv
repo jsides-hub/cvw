@@ -5,6 +5,7 @@
 module datapath(
         input   logic           clk, reset,
         input   logic [2:0]     Funct3,
+        input   logic           Jalr,
         input   logic           ALUResultSrc,
         input   logic [1:0]     ResultSrc,
         input   logic [1:0]     ALUSrc,
@@ -16,13 +17,13 @@ module datapath(
         output  logic           Ltu,
         input   logic [31:0]    PC, PCPlus4,
         input   logic [31:0]    Instr,
-        output  logic [31:0]    IEUAdr, WriteData,
+        output  logic [31:0]    IEUAdr, WriteData, Result,
         input   logic [31:0]    ReadData
     );
 
     logic [31:0] ImmExt, ReadExt;
     logic [31:0] R1, R2, SrcA, SrcB;
-    logic [31:0] ALUResult, IEUResult, Result;
+    logic [31:0] ALUResult, IEUResult;
 
     //readextend re(ReadData, Funct3, ReadExt);
 
@@ -42,6 +43,6 @@ module datapath(
 
     mux2 #(32) ieuresultmux(ALUResult, PCPlus4, ALUResultSrc, IEUResult);
     mux4 #(32) resultmux(IEUResult, ReadData, ImmExt, 'x, ResultSrc, Result);
-
     assign WriteData = R2;
+
 endmodule

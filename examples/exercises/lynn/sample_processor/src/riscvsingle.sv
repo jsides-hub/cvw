@@ -22,13 +22,13 @@ module riscvsingle (
         output  logic           Jalr
     );
 
-    logic [31:0] PCPlus4;
+    logic [31:0] PCPlus4, Result;
     logic PCSrc;
     logic Load;
 
-    ifu ifu(.clk, .reset, .PCSrc, .IEUAdr, .PC, .PCPlus4);
+    ifu ifu(.clk, .reset, .PCSrc, .IEUAdr, .Result, .PC, .PCPlus4);
     ieu ieu(.clk, .reset, .Instr, .PC, .PCPlus4, .PCSrc, .WriteByteEn,
-            .IEUAdr, .WriteData, .ReadData, .MemEn, .Funct3, .Jalr
+            .IEUAdr, .WriteData, .ReadData, .MemEn, .Funct3, .Jalr, .Result
         );
 
     assign WriteEn = |WriteByteEn;

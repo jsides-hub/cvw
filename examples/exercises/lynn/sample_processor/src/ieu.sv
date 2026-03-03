@@ -14,7 +14,8 @@ module ieu(
         input   logic [31:0]    ReadData,
         output  logic           MemEn,
         output  logic [2:0]     Funct3,
-        output  logic           Jalr
+        output  logic           Jalr,
+        output  logic[31:0]     Result
 
     );
 
@@ -33,7 +34,7 @@ module ieu(
     `endif
     );
 
-    datapath dp(.clk, .reset, .Funct3,
+    datapath dp(.clk, .reset, .Funct3, .Jalr,
         .ALUResultSrc, .ResultSrc, .ALUSrc, .RegWrite, .ImmSrc, .ALUControl, .Eq, .Lt, .Ltu,
-        .PC, .PCPlus4, .Instr, .IEUAdr, .WriteData, .ReadData);
+        .PC, .PCPlus4, .Instr, .IEUAdr, .WriteData, .Result, .ReadData);
 endmodule
