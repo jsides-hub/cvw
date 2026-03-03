@@ -14,6 +14,7 @@ sb_test:
 test1:
     addi sp, sp, -4
     li   t0, 83
+    lw t1, 4(sp)
     sb t0, 4(sp)
     lw t1, 4(sp)
     sll  t1, t1, 24
