@@ -12,6 +12,7 @@ module ifu(
     logic [31:0] PCNext;
     // next PC logic
     logic [31:0] entry_addr;
+    logic [31:0] Target;
 
     initial begin
         // default
@@ -29,5 +30,8 @@ module ifu(
     end
 
     adder pcadd4(PC, 32'd4, PCPlus4);
-    mux2 #(32) pcmux(PCPlus4, IEUAdr, PCSrc, PCNext);
+
+    assign Target = IEUAdr & {{31{1'b1}}, 1'b00};
+
+    mux2 #(32) pcmux(PCPlus4, Target, PCSrc, PCNext);
 endmodule

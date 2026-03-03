@@ -5,7 +5,6 @@
 module datapath(
         input   logic           clk, reset,
         input   logic [2:0]     Funct3,
-        input   logic           Jalr,
         input   logic           ALUResultSrc,
         input   logic [1:0]     ResultSrc,
         input   logic [1:0]     ALUSrc,
@@ -21,11 +20,9 @@ module datapath(
         input   logic [31:0]    ReadData
     );
 
-    logic [31:0] ImmExt, ReadExt;
+    logic [31:0] ImmExt, BranchRes;
     logic [31:0] R1, R2, SrcA, SrcB;
     logic [31:0] ALUResult, IEUResult;
-
-    //readextend re(ReadData, Funct3, ReadExt);
 
     // register file logic
     regfile rf(.clk, .WE3(RegWrite), .A1(Instr[19:15]), .A2(Instr[24:20]),
