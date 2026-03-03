@@ -20,7 +20,8 @@ module controller(
         output  logic [1:0]   ALUSrc,
         output  logic [2:0]   ImmSrc,
         output  logic [1:0]   ALUControl,
-        output  logic         MemEn
+        output  logic         MemEn,
+        output  logic         Jalr
     `ifdef DEBUG
         , input   logic [31:0]  insn_debug
     `endif
@@ -44,10 +45,10 @@ module controller(
             7'b1101111:         controls = 14'b1_011_11_0_1_0_00_0_1_0; // jal
             7'b0010111:         controls = 14'b1_100_11_0_0_0_00_0_0_0; // auipc
             7'b0110111:         controls = 14'b1_100_01_0_0_0_10_0_0_0; // lui
-            7'b1100111:         controls = 14'b1_000_01_0_1_0_00_0_1_0; // jalr
+            7'b1100111:         controls = 14'b1_000_01_0_1_0_00_0_1_1; // jalr
             default: begin
                 `ifdef DEBUG
-                    controls = 14'bx_xx_xx_x_x_x_x_x_x_x; // non-implemented instruction
+                    controls = 14'bx_xxx_xx_x_x_x_xx_x_x_x; // non-implemented instruction
                     if ((insn_debug !== 'x)) begin
                         $display("Instruction not implemented: %h", insn_debug);
                         $finish(-1);
@@ -65,9 +66,10 @@ module controller(
     assign Sub = (ALUOp & (((Funct3 == 3'b000) & Funct7b5 & Op[5]) | ((Funct3 == 3'b101) & Funct7b5) | (Funct3 == 3'b010) | (Funct3 == 3'b011))); // subtract or SLT
     assign ALUControl = {Sub, ALUOp};
 
+    assign Jalr = Jump & MemEn;
+
     // PCSrc logic
     assign PCSrc = Branch & (!Funct3[0] == ((Eq & (Funct3[2:1] == 2'b00)) | (Lt & (Funct3[2:1] == 2'b10)) | (Ltu & (Funct3[2:1] == 2'b11)))) | Jump;
-
 
     // MemWrite logic
 
@@ -78,7 +80,7 @@ module controller(
             0: WriteByteEn = {4{MemWrite}} & 4'b0001; // sb
             1: WriteByteEn = {4{MemWrite}} & 4'b0011; // sh
             2: WriteByteEn = {4{MemWrite}} & 4'b1111; // sw
-            default: WriteByteEn = 4'b0000;
+            default: WriteByteEn = 4'bxxxx;
         endcase
 
 

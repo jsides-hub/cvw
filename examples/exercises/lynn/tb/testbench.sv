@@ -51,6 +51,7 @@ module testbench;
   logic                           MemEn;
   logic [`XLEN/8-1:0]             WriteByteEn;   // byte enables, one per 8 bits
   logic [2:0]                     Funct3;
+  logic                           Jalr;
 
 /* ------- DEBUG PRINTS ------- */
 
@@ -67,7 +68,7 @@ module testbench;
       //         );
 
       // $display("DataAdr: %h, t0: %h, t1: %h, t2: %h, t3: %h", DataAdr, dut.ieu.dp.rf.rf[5], dut.ieu.dp.rf.rf[6], dut.ieu.dp.rf.rf[7], dut.ieu.dp.rf.rf[28]);
-
+      // $display("Mod: %h", dut.ieu.c.Mod);
       $display("DataAdr: %h", DataAdr);
       $display("ra: %h", dut.ieu.dp.rf.rf[1]);
       $display("sp: %h", dut.ieu.dp.rf.rf[2]);
@@ -125,7 +126,7 @@ module testbench;
     .MEMORY_FILE_BASE_ADDRESS (`ELF_BASE_ADR),
     .MEMORY_ADR_OFFSET        (`IMEM_BASE_ADR),
     .MEMFILE_PLUS_ARG         ("MEMFILE")
-  ) InstructionMemory (.clk, .reset, .En(1'b1), .WriteEn(1'b0), .WriteByteEn(4'b0), .MemoryAddress(PC), .WriteData(IMEM_WriteData), .Funct3(3'b010), .ReadData(Instr));
+  ) InstructionMemory (.clk, .reset, .En(1'b1), .WriteEn(1'b0), .WriteByteEn(4'b0), .MemoryAddress(PC), .WriteData(IMEM_WriteData), .Funct3(3'b010), .Jalr(1'b0), .ReadData(Instr));
   // no writes, only read full words
 
   ram1p1rwb #(
@@ -136,7 +137,7 @@ module testbench;
     .MEMORY_FILE_BASE_ADDRESS (`ELF_BASE_ADR),
     .MEMORY_ADR_OFFSET        (`DMEM_BASE_ADR),
     .MEMFILE_PLUS_ARG         ("MEMFILE")
-  ) DataMemory (.clk, .reset, .En(MemEn & ~TestbenchRequest), .WriteEn, .WriteByteEn, .MemoryAddress(DataAdr), .WriteData, .Funct3, .ReadData(MemReadData));
+  ) DataMemory (.clk, .reset, .En(MemEn & ~TestbenchRequest), .WriteEn, .WriteByteEn, .MemoryAddress(DataAdr), .WriteData, .Funct3, .Jalr, .ReadData(MemReadData));
 
   assign ReadData = TestbenchRequest ? TestbenchRequestReadData : MemReadData;
 
@@ -159,7 +160,8 @@ module testbench;
     .MemEn          (MemEn),
     .WriteEn        (WriteEn),
     .WriteByteEn    (WriteByteEn),
-    .Funct3         (Funct3)
+    .Funct3         (Funct3),
+    .Jalr           (Jalr)
   );
 
 /* ------- TOHOST Handling ------- */
