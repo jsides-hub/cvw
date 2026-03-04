@@ -4,7 +4,7 @@
 
 module ifu(
         input   logic           clk, reset,
-        input   logic [1:0]     PCSrc,
+        input   logic           PCSrc,
         input   logic [31:0]    IEUAdr, Result,
         output  logic [31:0]    PC, PCPlus4
     );
