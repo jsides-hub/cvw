@@ -20,7 +20,7 @@ module csrfile(
     always_ff @(negedge clk)
         RD1 <= csrfile[A];
         if (WE2)
-            case(Funct3[1:0]):
+            case(Funct3[1:0])
                 2'b01: rf[A] = WD1;
                 2'b10: rf[A] |= WD1;
                 2'b11: rf[A] &= WD1;
