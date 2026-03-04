@@ -12,7 +12,7 @@ module alu(
     // Sub on when slt, sltu, sub, sra, srai
 
     logic [31:0] CondInvb, Sum, SLT, SLTU, Right;
-    logic ALUOp, Sub, Overflow, Neg, LT;
+    logic ALUOp, Sub, Overflow, Neg, LT, Carry;
     logic [2:0] ALUFunct;
     logic [31:0] SignedShift, UnsignedShift;
 
@@ -20,7 +20,7 @@ module alu(
 
     // Add or subtract
     assign CondInvb = Sub ? ~SrcB : SrcB;
-    assign Sum = SrcA + CondInvb + {{(31){1'b0}}, Sub};
+    assign {Carry, Sum} = SrcA + CondInvb + {{(31){1'b0}}, Sub};
     assign IEUAdr = Sum; // Send this out to IFU and LSU
 
     // Set less than based on subtraction result
@@ -28,7 +28,7 @@ module alu(
     assign Neg = Sum[31];
 
     assign LT = Neg ^ Overflow;
-    assign LTU = (SrcA < SrcB);
+    assign LTU = !Carry;
     assign SLT = {31'b0, LT};
     assign SLTU = {31'b0, LTU};
 
