@@ -68,6 +68,9 @@ module testbench;
       // $display("DataAdr: %h", DataAdr);
 
       // $display("CSR Select: %h", dut.csr.CSRVal);
+      // $display("CSR Offset: %h", dut.csr.Offset);
+      // $display("CSR Op: %h", dut.csr.CSROp);
+      // $display("CSR Result: %h", dut.csr.CSRResult);
 
       // $display("ra: %h", dut.ieu.dp.rf.rf[1]);
       // $display("sp: %h", dut.ieu.dp.rf.rf[2]);

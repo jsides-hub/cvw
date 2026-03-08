@@ -46,20 +46,13 @@ module csr(
 
     // Read value
     logic [11:0] CSRVal;
+    logic [11:0] Offset;
+
     assign CSRVal = Instr[31:20];
+    assign Offset = CSRVal - 12'hC00;
 
     always_comb
-        case(CSRVal)
-            12'hC00: CSRResult = CSRVals[0][31:0];
-            12'hC01: CSRResult = CSRVals[1][31:0];
-            12'hC02: CSRResult = CSRVals[2][31:0];
-            12'hC03: CSRResult = CSRVals[3][31:0];
-            12'hC80: CSRResult = CSRVals[0][63:32];
-            12'hC81: CSRResult = CSRVals[1][63:32];
-            12'hC82: CSRResult = CSRVals[2][63:32];
-            12'hC83: CSRResult = CSRVals[3][63:32];
-            default: CSRResult = '0;
-        endcase
-
+        if(CSROp & (Offset < 12'h00B)) CSRResult = CSRVals[Offset][31:0];
+        else CSRResult = CSROp ? CSRVals[Offset - 12'h080][63:32] : 'x;
 
 endmodule
