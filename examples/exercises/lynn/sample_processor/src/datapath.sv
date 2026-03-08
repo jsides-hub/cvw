@@ -11,6 +11,7 @@ module datapath(
         input   logic           RegWrite,
         input   logic [2:0]     ImmSrc,
         input   logic [1:0]     ALUControl,
+        input   logic [31:0]    CSRResult,
         output  logic           Eq,
         output  logic           Lt,
         output  logic           Ltu,
@@ -39,7 +40,8 @@ module datapath(
     alu alu(.SrcA, .SrcB, .ALUControl, .Funct3, .ALUResult, .IEUAdr);
 
     mux2 #(32) ieuresultmux(ALUResult, PCPlus4, ALUResultSrc, IEUResult);
-    mux4 #(32) resultmux(IEUResult, ReadData, ImmExt, 'x, ResultSrc, Result);
+
+    mux4 #(32) resultmux(IEUResult, ReadData, ImmExt, CSRResult, ResultSrc, Result);
     assign WriteData = R2;
 
 endmodule

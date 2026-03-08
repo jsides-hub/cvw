@@ -21,14 +21,15 @@ module riscvsingle (
         output  logic [2:0]     Funct3
     );
 
-    logic [31:0] PCPlus4, Result;
+    logic [31:0] PCPlus4, Result, CSRResult;
     logic PCSrc;
     logic Load;
 
     ifu ifu(.clk, .reset, .PCSrc, .IEUAdr, .Result, .PC, .PCPlus4);
-    ieu ieu(.clk, .reset, .Instr, .PC, .PCPlus4, .PCSrc, .WriteByteEn,
+    ieu ieu(.clk, .reset, .Instr, .PC, .PCPlus4, .CSRResult, .PCSrc, .WriteByteEn,
             .IEUAdr, .WriteData, .ReadData, .MemEn, .Funct3, .Result
         );
+    csr csr(.clk, .reset, .Instr, .BranchTaken(PCSrc), .WriteEn, .MemEn, .CSRResult);
 
     assign WriteEn = |WriteByteEn;
 endmodule
