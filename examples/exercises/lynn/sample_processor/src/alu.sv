@@ -12,7 +12,7 @@ module alu(
     // Sub on when slt, sltu, sub, sra, srai
 
     logic [31:0] CondInvb, Sum, SLT, SLTU, Right;
-    logic ALUOp, Sub, Overflow, Neg, LT, Carry;
+    logic ALUOp, Sub, Overflow, Neg, LT, LTU, Carry;
     logic [2:0] ALUFunct;
     logic [31:0] SignedShift, UnsignedShift;
 
