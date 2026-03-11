@@ -156,11 +156,11 @@ void _init(int cid, int nc)
   ee_printf("Branches Taken (hpm5) %lld\n",        counters[4]);
 
   // Implementation-defined (your choice):
-  ee_printf("Custom Counter 6 (hpm6) %lld\n",      counters[5]);
-  ee_printf("Custom Counter 7 (hpm7) %lld\n",      counters[6]);
-  ee_printf("Custom Counter 8 (hpm8) %lld\n",      counters[7]);
-  ee_printf("Custom Counter 9 (hpm9) %lld\n",      counters[8]);
-  ee_printf("Custom Counter 10 (hpm10) %lld\n",    counters[9]);
+  ee_printf("Jumps Taken (hpm6) -  %lld\n",      counters[5]);
+  ee_printf("Memory Writes (hpm7) %lld\n",      counters[6]);
+  ee_printf("Memory Operations (hpm8) %lld\n",      counters[7]);
+  ee_printf("CSR Operations (hpm9) %lld\n",      counters[8]);
+  ee_printf("Non-add ALU Operations (hpm10) %lld\n",    counters[9]);
 
   ee_printf("Done printing performance counters\n");
 

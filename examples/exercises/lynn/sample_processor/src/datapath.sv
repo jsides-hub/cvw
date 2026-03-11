@@ -6,12 +6,13 @@ module datapath(
         input   logic           clk, reset,
         input   logic [2:0]     Funct3,
         input   logic           ALUResultSrc,
-        input   logic [1:0]     ResultSrc,
+        input   logic [2:0]     ResultSrc,
         input   logic [1:0]     ALUSrc,
         input   logic           RegWrite,
         input   logic [2:0]     ImmSrc,
         input   logic [1:0]     ALUControl,
         input   logic [31:0]    CSRResult,
+        input   logic           Mul,
         output  logic           Eq,
         output  logic           Lt,
         output  logic           Ltu,
@@ -22,7 +23,7 @@ module datapath(
     );
 
     logic [31:0] ImmExt, BranchRes;
-    logic [31:0] R1, R2, SrcA, SrcB;
+    logic [31:0] R1, R2, SrcA, SrcB, MulRes;
     logic [31:0] ALUResult, IEUResult;
 
     // register file logic
@@ -41,7 +42,9 @@ module datapath(
 
     mux2 #(32) ieuresultmux(ALUResult, PCPlus4, ALUResultSrc, IEUResult);
 
-    mux4 #(32) resultmux(IEUResult, ReadData, ImmExt, CSRResult, ResultSrc, Result);
+    multiplier mul(.InputA(SrcA), .InputB(SrcB), .Con(Funct3[1:0]), .Result(MulRes));
+
+    mux6 #(32) resultmux(IEUResult, ReadData, ImmExt, CSRResult, MulRes, 'x, ResultSrc, Result);
     assign WriteData = R2;
 
 endmodule
