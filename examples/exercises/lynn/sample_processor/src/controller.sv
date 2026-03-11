@@ -78,7 +78,7 @@ module controller(
             0: WriteByteEn = {4{MemWrite}} & 4'b0001; // sb
             1: WriteByteEn = {4{MemWrite}} & 4'b0011; // sh
             2: WriteByteEn = {4{MemWrite}} & 4'b1111; // sw
-            default: WriteByteEn = 4'bxxxx;
+            default: WriteByteEn = 4'b0000;
         endcase
 
 
