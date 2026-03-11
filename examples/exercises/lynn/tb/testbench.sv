@@ -63,7 +63,7 @@ module testbench;
       // $display("MemEn: %b",
       //         MemEn
       //         );
-      // $display("PC: %h \t Instr: %h", PC, Instr);
+      $display("PC: %h \t Instr: %h", PC, Instr);
       // $display("DataAdr: %h, t0: %h, t1: %h, t2: %h, t3: %h", DataAdr, dut.ieu.dp.rf.rf[5], dut.ieu.dp.rf.rf[6], dut.ieu.dp.rf.rf[7], dut.ieu.dp.rf.rf[28]);
       // $display("DataAdr: %h", DataAdr);
 
@@ -71,7 +71,17 @@ module testbench;
       // $display("CSR Offset: %h", dut.csr.Offset);
       // $display("CSR Op: %h", dut.csr.CSROp);
       // $display("CSR Result: %h", dut.csr.CSRResult);
+      // $display("CSR Event 10: %h", dut.csr.Events[10]);
+      // $display("CSR Val: %h", dut.csr.csr.CSRVals[10]);
 
+      $display("SrcA: %h", dut.ieu.dp.SrcA);
+      $display("SrcB: %h", dut.ieu.dp.SrcB);
+
+      $display("Result: %h", dut.ieu.dp.Result);
+
+      $display("Multiplexer control: %h", dut.ieu.dp.ResultSrc);
+
+      // $display("zero: %h", dut.ieu.dp.rf.rf[0]);
       // $display("ra: %h", dut.ieu.dp.rf.rf[1]);
       // $display("sp: %h", dut.ieu.dp.rf.rf[2]);
       // $display("gp: %h", dut.ieu.dp.rf.rf[3]);
@@ -97,12 +107,12 @@ module testbench;
       // $display("a6: %h", dut.ieu.dp.rf.rf[16]);
       // $display("a7: %h", dut.ieu.dp.rf.rf[17]);
       // $display("t0: %h", dut.ieu.dp.rf.rf[5]);
-      // $display("t1: %h", dut.ieu.dp.rf.rf[6]);
+      $display("t1: %h", dut.ieu.dp.rf.rf[6]);
       // $display("t2: %h", dut.ieu.dp.rf.rf[7]);
       // $display("t3: %h", dut.ieu.dp.rf.rf[28]);
       // $display("t4: %h", dut.ieu.dp.rf.rf[29]);
       // $display("t5: %h", dut.ieu.dp.rf.rf[30]);
-      // $display("t6: %h", dut.ieu.dp.rf.rf[31]);
+      $display("t6: %h", dut.ieu.dp.rf.rf[31]);
 
 
 

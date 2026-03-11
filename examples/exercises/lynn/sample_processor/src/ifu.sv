@@ -25,8 +25,8 @@ module ifu(
     end
 
     always_ff @(posedge clk or posedge reset) begin
-    if (reset)  PC <= entry_addr;
-    else        PC <= PCNext;
+        if (reset)  PC <= entry_addr;
+        else        PC <= PCNext;
     end
 
     adder pcadd4(PC, 32'd4, PCPlus4);

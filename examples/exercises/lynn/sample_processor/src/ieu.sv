@@ -20,21 +20,21 @@ module ieu(
     );
 
     logic RegWrite, Jump, Eq, ALUResultSrc;
-    logic [1:0] ALUSrc, ResultSrc;
-    logic [2:0] ImmSrc;
+    logic [1:0] ALUSrc;
+    logic [2:0]  ResultSrc, ImmSrc;
     logic [1:0] ALUControl;
-    logic Lt, Ltu, IEUSrc;
+    logic Lt, Ltu, IEUSrc, Mul;
     assign Funct3 = Instr[14:12];
 
     controller c(.Op(Instr[6:0]), .Funct3, .Funct7b5(Instr[30]), .Mod(Instr[8:7]), .Eq, .Lt, .Ltu,
         .ALUResultSrc, .ResultSrc, .WriteByteEn, .PCSrc,
-        .ALUSrc, .RegWrite, .ImmSrc, .ALUControl, .MemEn
+        .ALUSrc, .RegWrite, .ImmSrc, .ALUControl, .MemEn, .Mul
     `ifdef DEBUG
         , .insn_debug(Instr)
     `endif
     );
 
     datapath dp(.clk, .reset, .Funct3,
-        .ALUResultSrc, .ResultSrc, .ALUSrc, .RegWrite, .ImmSrc, .ALUControl, .CSRResult, .Eq, .Lt, .Ltu,
+        .ALUResultSrc, .ResultSrc, .ALUSrc, .RegWrite, .ImmSrc, .ALUControl, .CSRResult, .Mul, .Eq, .Lt, .Ltu,
         .PC, .PCPlus4, .Instr, .IEUAdr, .WriteData, .Result, .ReadData);
 endmodule
