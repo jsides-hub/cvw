@@ -71,6 +71,18 @@ module testbench;
       // $display("CSR Offset: %h", dut.csr.Offset);
       // $display("CSR Op: %h", dut.csr.CSROp);
       // $display("CSR Result: %h", dut.csr.CSRResult);
+      // $display("CSR Event 10: %h", dut.csr.Events[10]);
+      // $display("CSR Val: %h", dut.csr.csr.CSRVals[10]);
+
+      // $display("SrcA: %h", dut.ieu.dp.SrcA);
+      // $display("SrcB: %h", dut.ieu.dp.SrcB);
+
+      // $display("Result: %h", dut.ieu.dp.Result);
+
+      // $display("Multiplication result: %h", dut.ieu.dp.MulRes);
+
+      // $display("Multiplexer control: %h", dut.ieu.dp.ResultSrc);
+
 
       // $display("ra: %h", dut.ieu.dp.rf.rf[1]);
       // $display("sp: %h", dut.ieu.dp.rf.rf[2]);
