@@ -8,6 +8,7 @@ module controller(
         input   logic [6:0]   Op,
         input   logic [2:0]   Funct3,
         input   logic         Funct7b5,
+        input   logic         Funct7b0,
         input   logic [1:0]   Mod,
         input   logic         Eq,
         input   logic         Lt,
@@ -38,7 +39,8 @@ module controller(
             // RegWrite_ImmSrc_ALUSrc_ALUOp_ALUResultSrc_MemWrite_ResultSrc_Branch_Jump_Load_Mul
             7'b0000011:         controls = 16'b1_000_01_0_0_0_001_0_0_1_0; // I-type load
             7'b0100011:         controls = 16'b0_001_01_0_0_1_000_0_0_1_0; // S-type
-            7'b0110011:         controls = 16'b1_xxx_00_1_0_0_000_0_0_0_0; // R-type non-mul
+            7'b0110011: if (Funct7b0)               controls = 16'b1_xxx_00_0_x_0_100_0_0_0_1; // R-type mul
+                        else    controls = 16'b1_xxx_00_1_0_0_000_0_0_0_0; // R-type non-mul
             7'b0010011: if (Funct3[1:0] == 2'b01)   controls = 16'b1_101_01_1_0_0_000_0_0_0_0; // I-type ALU uimm
                         else    controls = 16'b1_000_01_1_0_0_000_0_0_0_0; // I-type ALU
             7'b1100011:         controls = 16'b0_010_11_0_0_0_000_1_0_0_0; // B-type
@@ -47,7 +49,6 @@ module controller(
             7'b0110111:         controls = 16'b1_100_01_0_0_0_010_0_0_0_0; // lui
             7'b1100111:         controls = 16'b1_000_01_0_1_0_000_0_1_0_0; // jalr
             7'b1110011:         controls = 16'b1_xxx_xx_x_x_0_011_0_0_0_0; // csr
-            7'b0110011:         controls = 16'b1_xxx_00_0_x_0_100_0_0_0_1; // R-type mul
             default: begin
                 `ifdef DEBUG
                     controls = 16'bx_xxx_xx_x_x_x_xxx_x_x_x_x; // non-implemented instruction

@@ -26,7 +26,7 @@ module ieu(
     logic Lt, Ltu, IEUSrc, Mul;
     assign Funct3 = Instr[14:12];
 
-    controller c(.Op(Instr[6:0]), .Funct3, .Funct7b5(Instr[30]), .Mod(Instr[8:7]), .Eq, .Lt, .Ltu,
+    controller c(.Op(Instr[6:0]), .Funct3, .Funct7b5(Instr[30]), .Funct7b0(Instr[25]), .Mod(Instr[8:7]), .Eq, .Lt, .Ltu,
         .ALUResultSrc, .ResultSrc, .WriteByteEn, .PCSrc,
         .ALUSrc, .RegWrite, .ImmSrc, .ALUControl, .MemEn, .Mul
     `ifdef DEBUG

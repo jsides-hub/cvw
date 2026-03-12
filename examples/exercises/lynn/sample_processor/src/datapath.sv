@@ -45,6 +45,7 @@ module datapath(
     multiplier mul(.InputA(SrcA), .InputB(SrcB), .Con(Funct3[1:0]), .Result(MulRes));
 
     mux6 #(32) resultmux(IEUResult, ReadData, ImmExt, CSRResult, MulRes, 'x, ResultSrc, Result);
+
     assign WriteData = R2;
 
 endmodule
