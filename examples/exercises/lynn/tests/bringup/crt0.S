@@ -15,7 +15,7 @@
 
 rvtest_entry_point:
     /* ---- stack pointer ---- */
-    li   sp, 0
+    li   sp, 2147484928 /* converts to address 0x80000500*/
 
     /* ---- zero all integer registers (except x0, sp) ---- */
     li   ra, 0        /* x1  */
@@ -88,6 +88,7 @@ finish:
 
     sw   gp, 0(t0)
     sw   x0, 4(t0)
+
 1:
     j    1b
 

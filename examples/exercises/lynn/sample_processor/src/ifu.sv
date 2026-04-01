@@ -5,13 +5,14 @@
 module ifu(
         input   logic           clk, reset,
         input   logic           PCSrc,
-        input   logic [31:0]    IEUAdr,
+        input   logic [31:0]    IEUAdr, Result,
         output  logic [31:0]    PC, PCPlus4
     );
 
     logic [31:0] PCNext;
     // next PC logic
     logic [31:0] entry_addr;
+    logic [31:0] Target;
 
     initial begin
         // default
@@ -24,10 +25,13 @@ module ifu(
     end
 
     always_ff @(posedge clk or posedge reset) begin
-    if (reset)  PC <= entry_addr;
-    else        PC <= PCNext;
+        if (reset)  PC <= entry_addr;
+        else        PC <= PCNext;
     end
 
     adder pcadd4(PC, 32'd4, PCPlus4);
-    mux2 #(32) pcmux(PCPlus4, IEUAdr, PCSrc, PCNext);
+
+    assign Target = IEUAdr & {{31{1'b1}}, 1'b0};
+
+    mux2 #(32) pcmux(PCPlus4, Target, PCSrc, PCNext);
 endmodule

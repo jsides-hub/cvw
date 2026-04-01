@@ -17,17 +17,19 @@ module riscvsingle (
 
         output  logic           MemEn,
         output  logic           WriteEn,
-        output  logic [3:0]     WriteByteEn  // strobes, 1 hot stating weather a byte should be written on a store
+        output  logic [3:0]     WriteByteEn,  // strobes, 1 hot stating whether a byte should be written on a store
+        output  logic [2:0]     Funct3
     );
 
-    logic [31:0] PCPlus4;
+    logic [31:0] PCPlus4, Result, CSRResult;
     logic PCSrc;
     logic Load;
 
-    ifu ifu(.clk, .reset, .PCSrc, .IEUAdr, .PC, .PCPlus4);
-    ieu ieu(.clk, .reset, .Instr, .PC, .PCPlus4, .PCSrc, .WriteByteEn,
-            .IEUAdr, .WriteData, .ReadData, .MemEn
+    ifu ifu(.clk, .reset, .PCSrc, .IEUAdr, .Result, .PC, .PCPlus4);
+    ieu ieu(.clk, .reset, .Instr, .PC, .PCPlus4, .CSRResult, .PCSrc, .WriteByteEn,
+            .IEUAdr, .WriteData, .ReadData, .MemEn, .Funct3, .Result
         );
+    csr csr(.clk, .reset, .Instr, .BranchTaken(PCSrc), .WriteEn, .MemEn, .CSRResult);
 
     assign WriteEn = |WriteByteEn;
 endmodule

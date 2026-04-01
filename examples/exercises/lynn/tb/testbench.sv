@@ -50,6 +50,7 @@ module testbench;
   logic                           WriteEn;
   logic                           MemEn;
   logic [`XLEN/8-1:0]             WriteByteEn;   // byte enables, one per 8 bits
+  logic [2:0]                     Funct3;
 
 /* ------- DEBUG PRINTS ------- */
 
@@ -59,16 +60,65 @@ module testbench;
 
     if (~reset) begin
 
-      //$display("PC: %h \t Instr: %h", PC, Instr);
-
       // $display("MemEn: %b",
       //         MemEn
       //         );
+      // $display("PC: %h \t Instr: %h", PC, Instr);
+      // $display("DataAdr: %h, t0: %h, t1: %h, t2: %h, t3: %h", DataAdr, dut.ieu.dp.rf.rf[5], dut.ieu.dp.rf.rf[6], dut.ieu.dp.rf.rf[7], dut.ieu.dp.rf.rf[28]);
+      // $display("DataAdr: %h", DataAdr);
 
-      // $display("DataAdr: %h, t0: %h",
-      //         DataAdr,
-      //         dut.ieu.dp.rf.rf[5]
-      //         );
+      // $display("CSR Select: %h", dut.csr.CSRVal);
+      // $display("CSR Offset: %h", dut.csr.Offset);
+      // $display("CSR Op: %h", dut.csr.CSROp);
+      // $display("CSR Result: %h", dut.csr.CSRResult);
+      // $display("CSR Event 10: %h", dut.csr.Events[10]);
+      // $display("CSR Val: %h", dut.csr.csr.CSRVals[10]);
+
+      // $display("SrcA: %h", dut.ieu.dp.SrcA);
+      // $display("SrcB: %h", dut.ieu.dp.SrcB);
+
+      // $display("Result: %h", dut.ieu.dp.Result);
+
+      // $display("Multiplication result: %h", dut.ieu.dp.MulRes);
+
+      // $display("Multiplexer control: %h", dut.ieu.dp.ResultSrc);
+
+
+      // $display("ra: %h", dut.ieu.dp.rf.rf[1]);
+      // $display("sp: %h", dut.ieu.dp.rf.rf[2]);
+      // $display("gp: %h", dut.ieu.dp.rf.rf[3]);
+      // $display("tp: %h", dut.ieu.dp.rf.rf[4]);
+      // $display("s0: %h", dut.ieu.dp.rf.rf[8]);
+      // $display("s1: %h", dut.ieu.dp.rf.rf[9]);
+      // $display("s2: %h", dut.ieu.dp.rf.rf[18]);
+      // $display("s3: %h", dut.ieu.dp.rf.rf[19]);
+      // $display("s4: %h", dut.ieu.dp.rf.rf[20]);
+      // $display("s5: %h", dut.ieu.dp.rf.rf[21]);
+      // $display("s6: %h", dut.ieu.dp.rf.rf[22]);
+      // $display("s7: %h", dut.ieu.dp.rf.rf[23]);
+      // $display("s8: %h", dut.ieu.dp.rf.rf[24]);
+      // $display("s9: %h", dut.ieu.dp.rf.rf[25]);
+      // $display("s10: %h", dut.ieu.dp.rf.rf[26]);
+      // $display("s11: %h", dut.ieu.dp.rf.rf[27]);
+      // $display("a0: %h", dut.ieu.dp.rf.rf[10]);
+      // $display("a1: %h", dut.ieu.dp.rf.rf[11]);
+      // $display("a2: %h", dut.ieu.dp.rf.rf[12]);
+      // $display("a3: %h", dut.ieu.dp.rf.rf[13]);
+      // $display("a4: %h", dut.ieu.dp.rf.rf[14]);
+      // $display("a5: %h", dut.ieu.dp.rf.rf[15]);
+      // $display("a6: %h", dut.ieu.dp.rf.rf[16]);
+      // $display("a7: %h", dut.ieu.dp.rf.rf[17]);
+      // $display("t0: %h", dut.ieu.dp.rf.rf[5]);
+      // $display("t1: %h", dut.ieu.dp.rf.rf[6]);
+      // $display("t2: %h", dut.ieu.dp.rf.rf[7]);
+      // $display("t3: %h", dut.ieu.dp.rf.rf[28]);
+      // $display("t4: %h", dut.ieu.dp.rf.rf[29]);
+      // $display("t5: %h", dut.ieu.dp.rf.rf[30]);
+      // $display("t6: %h", dut.ieu.dp.rf.rf[31]);
+
+
+
+
 
       // terminate program as it exited program space
       if (Instr === 'x) begin
@@ -90,7 +140,8 @@ module testbench;
     .MEMORY_FILE_BASE_ADDRESS (`ELF_BASE_ADR),
     .MEMORY_ADR_OFFSET        (`IMEM_BASE_ADR),
     .MEMFILE_PLUS_ARG         ("MEMFILE")
-  ) InstructionMemory (.clk, .reset, .En(1'b1), .WriteEn(1'b0), .WriteByteEn(4'b0), .MemoryAddress(PC), .WriteData(IMEM_WriteData), .ReadData(Instr));
+  ) InstructionMemory (.clk, .reset, .En(1'b1), .WriteEn(1'b0), .WriteByteEn(4'b0), .MemoryAddress(PC), .WriteData(IMEM_WriteData), .Funct3(3'b010), .ReadData(Instr));
+  // no writes, only read full words
 
   ram1p1rwb #(
     .MEMORY_NAME              ("Data Memory"),
@@ -100,7 +151,7 @@ module testbench;
     .MEMORY_FILE_BASE_ADDRESS (`ELF_BASE_ADR),
     .MEMORY_ADR_OFFSET        (`DMEM_BASE_ADR),
     .MEMFILE_PLUS_ARG         ("MEMFILE")
-  ) DataMemory (.clk, .reset, .En(MemEn & ~TestbenchRequest), .WriteEn, .WriteByteEn, .MemoryAddress(DataAdr), .WriteData, .ReadData(MemReadData));
+  ) DataMemory (.clk, .reset, .En(MemEn & ~TestbenchRequest), .WriteEn, .WriteByteEn, .MemoryAddress(DataAdr), .WriteData, .Funct3, .ReadData(MemReadData));
 
   assign ReadData = TestbenchRequest ? TestbenchRequestReadData : MemReadData;
 
@@ -122,7 +173,8 @@ module testbench;
     .WriteData      (WriteData),
     .MemEn          (MemEn),
     .WriteEn        (WriteEn),
-    .WriteByteEn    (WriteByteEn)
+    .WriteByteEn    (WriteByteEn),
+    .Funct3         (Funct3)
   );
 
 /* ------- TOHOST Handling ------- */

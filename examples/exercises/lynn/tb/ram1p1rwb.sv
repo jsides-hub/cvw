@@ -15,10 +15,13 @@ module ram1p1rwb #(
 
     input   logic                       En,
     input   logic                       WriteEn,
+
     input   logic[(DATA_BITS/8)-1:0]    WriteByteEn,
 
     input   logic[ADDRESS_BITS-1:0]     MemoryAddress,
     input   logic[DATA_BITS-1:0]        WriteData,
+
+    input  logic[2:0]                  Funct3,
 
     output  logic[DATA_BITS-1:0]        ReadData
 );
@@ -29,7 +32,21 @@ module ram1p1rwb #(
 
     logic[DATA_BITS-1:0] Memory[MEMORY_SIZE_ENTRIES-1:0];
 
-    assign ReadData = En ? Memory[(MemoryAddress-MEMORY_ADR_OFFSET)>>2] : 'x;
+    logic [31:0] Mem;
+    logic [1:0] Mod;
+
+    assign Mod = (MemoryAddress-MEMORY_ADR_OFFSET)%4;
+    assign Mem = Memory[(MemoryAddress-MEMORY_ADR_OFFSET)>>2] >> (8 * Mod);
+
+    always_comb
+        case(Funct3)
+            0: ReadData = En ? {{25{Mem[7]}}, Mem[6:0]} : 'x; // lb or jalr
+            1: ReadData = En ? {{17{Mem[15]}}, Mem[14:0]} : 'x; // lh
+            2: ReadData = En ? Mem : 'x; // lw
+            4: ReadData = En ? {{24{1'b0}}, Mem[7:0]} : 'x; // lbu
+            5: ReadData = En ? {{16{1'b0}}, Mem[15:0]} : 'x; // lhu
+            default: ReadData = 'x;
+        endcase
 
     always_ff @(negedge clk) begin
         //$display("%s En: %h WriteEn: %h Addr: %h ReadData: %h", MEMORY_NAME, En, WriteEn, MemoryAddress, ReadData);
@@ -55,18 +72,34 @@ module ram1p1rwb #(
 
         end else if (WriteEn && En) begin
             logic[DATA_BITS-1:0] LocalReadData;
-
+            logic[1:0] ModWrite;
+            ModWrite = (MemoryAddress+MEMORY_ADR_OFFSET) % 4;
             LocalReadData = Memory[(MemoryAddress-MEMORY_ADR_OFFSET)>>2];
-
-            //$display("%s Writing to local adr: %h, Write Data: %h, byte en: %b", MEMORY_NAME, (MemoryAddress-MEMORY_ADR_OFFSET)>>2, WriteData, WriteByteEn);
-
+            // $display("%s Writing to local adr: %h, Write Data: %h, byte en: %b", MEMORY_NAME, (MemoryAddress-MEMORY_ADR_OFFSET)>>2, WriteData, WriteByteEn);
             for (int i = 0; i < (DATA_BITS/8); i++) begin
                 if (WriteByteEn[i]) begin
-                    LocalReadData[((i+1)*8-1) -: 8] = WriteData[((i+1)*8-1) -: 8];
+                    // $display("Prev byte: %h, new byte: %h", LocalReadData[((i+1)*8-1) -: 8], WriteData[((i+1)*8-1) -: 8]);
+                    LocalReadData[((i+ ModWrite +1)*8-1) -: 8] = WriteData[((i+1)*8-1) -: 8];
+
                 end
             end
 
             Memory[(MemoryAddress-MEMORY_ADR_OFFSET)>>2] <= LocalReadData;
+
+
+            // logic[DATA_BITS-1:0] LocalReadData;
+
+            // LocalReadData = Memory[(MemoryAddress-MEMORY_ADR_OFFSET)>>2];
+
+            // //$display("%s Writing to local adr: %h, Write Data: %h, byte en: %b", MEMORY_NAME, (MemoryAddress-MEMORY_ADR_OFFSET)>>2, WriteData, WriteByteEn);
+
+            // for (int i = 0; i < (DATA_BITS/8); i++) begin
+            //     if (WriteByteEn[i]) begin
+            //         LocalReadData[((i+1)*8-1) -: 8] = WriteData[((i+1)*8-1) -: 8];
+            //     end
+            // end
+
+            // Memory[(MemoryAddress-MEMORY_ADR_OFFSET)>>2] <= LocalReadData;
         end
     end
 
