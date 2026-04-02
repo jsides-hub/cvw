@@ -39,17 +39,23 @@ module datapath(
         output  logic [31:0]    ImmExtE,
         output  logic [31:0]    FSrcBE,
         output  logic [31:0]    IEUAdrE,
-        output  logic [31:0]    IEUResultE
+        output  logic [31:0]    IEUResultE,
+
+        output  logic [4:0]     Rd1D, Rd2D, Rd1E, Rd2E
+
     );
 
     logic [31:0] ImmExtD, BranchRes;
-    logic [31:0] R1D, R2D, SrcA, SrcB, MulRes;
+    logic [31:0] SrcA, SrcB, MulRes;
     // logic [31:0] MulRes;
     logic [31:0] ALUResult, IEUResult;
 
     // register file logic
+    assign Rd1D = InstrD[19:15];
+    assign Rd2D = InstrD[24:20];
     logic [31:0] ResultW;
-    regfile rf(.clk, .WE3(RegWriteW), .A1(InstrD[19:15]), .A2(InstrD[24:20]),
+    logic [31:0] R1D, R2D, R1E, R2E;
+    regfile rf(.clk, .WE3(RegWriteW), .A1(Rd1D), .A2(Rd2D),
         .A3(RdW), .WD3(ResultW), .RD1(R1D), .RD2(R2D));
 
     extend ext(.Instr(InstrD[31:7]), .ImmSrc(ImmSrcD), .ImmExt(ImmExtD));
@@ -59,6 +65,9 @@ module datapath(
     flopenrc #(3) Funct3DE(.clk, .reset, .Stall(StallE), .Flush(FlushE), .D(Funct3D), .Q(Funct3E));
     logic [31:0] PCE;
     flopenrc #(32) PCDE(.clk, .reset, .Stall(StallE), .Flush(FlushE), .D(PCD), .Q(PCE));
+
+    flopenrc #(5) Rd1DE(.clk, .reset, .Stall(StallE), .Flush(FlushE), .D(Rd1D), .Q(Rd1E));
+    flopenrc #(5) Rd2DE(.clk, .reset, .Stall(StallE), .Flush(FlushE), .D(Rd2D), .Q(Rd2E));
 
     logic ALUResultSrcE;
     flopenrc #(1) ALUResultSrcDE(.clk, .reset, .Stall(StallE), .Flush(FlushE), .D(ALUResultSrcD), .Q(ALUResultSrcE));
@@ -77,9 +86,7 @@ module datapath(
     logic JumpE;
     flopenrc #(1) JumpDE(.clk, .reset, .Stall(StallE), .Flush(FlushE), .D(JumpD), .Q(JumpE));
 
-    logic [31:0] R1E;
     flopenrc #(32) R1DE(.clk, .reset, .Stall(StallE), .Flush(FlushE), .D(R1D), .Q(R1E));
-    logic [31:0] R2E;
     flopenrc #(32) R2DE(.clk, .reset, .Stall(StallE), .Flush(FlushE), .D(R2D), .Q(R2E));
     flopenrc #(5) RdDE(.clk, .reset, .Stall(StallE), .Flush(FlushE), .D(InstrD[11:7]), .Q(RdE));
     flopenrc #(32) ImmExtDE(.clk, .reset, .Stall(StallE), .Flush(FlushE), .D(ImmExtD), .Q(ImmExtE));
