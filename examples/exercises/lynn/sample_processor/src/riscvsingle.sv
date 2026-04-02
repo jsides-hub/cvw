@@ -23,12 +23,13 @@ module riscvsingle (
 
     logic [31:0]    InstrD, PCD, ReadDataW, CSRResultW, ImmExtW, ImmExtE, FSrcBE, ResultW;
     logic [31:0]    IEUResultW, IEUResultM, IEUResultE, IEUAdrE;
-    logic           RegWriteW, RegWriteE, MemEnE, PCSrcD;
+    logic           RegWriteE, RegWriteM, RegWriteW, MemEnE, MemEnD, PCSrcD;
     logic [2:0]     ResultSrcW, ResultSrcE, Funct3E;
-    logic [4:0]     RdW, RdE;
+    logic [4:0]     RdE, RdM, RdW;
     logic [3:0]     WriteByteEnE;
     logic           StallF, StallD, FlushD, StallE, FlushE, StallM, FlushM, StallW, FlushW;
     logic [1:0]     ForwardAE, ForwardBE;
+    logic [4:0]     Rd1D, Rd2D, Rd1E, Rd2E;
 
     ifu ifu(.clk, .reset, .PCSrcD, .IEUAdrE, .InstrF,
             .StallF, .StallD, .FlushD,
@@ -37,13 +38,16 @@ module riscvsingle (
             .ForwardAE, .ForwardBE, .StallE, .FlushE,
             .RegWriteW, .ResultSrcW, .IEUResultW, .ReadDataW, .CSRResultW, .ImmExtW, .RdW, .IEUResultM,
             .RegWriteE, .ResultSrcE, .MemEnE, .IEUResultE, .IEUAdrE, .FSrcBE, .Funct3E, .RdE, .ImmExtE,
-            .PCSrcD, .WriteByteEnE, .ResultW);
+            .PCSrcD, .WriteByteEnE, .ResultW,
+            .Rd1D, .Rd2D, .Rd1E, .Rd2E, .MemEnD);
     lsu lsu(.clk, .reset, .RegWriteE, .ResultSrcE, .MemEnE, .WriteByteEnE, .IEUResultE, .IEUAdrE, .WriteDataE(FSrcBE), .Funct3E, .RdE, .ImmExtE,
             .StallM, .FlushM, .StallW, .FlushW, .ReadDataM,
             .IEUAdrM, .WriteDataM, .MemEnM, .WriteByteEnM, .Funct3M,
-            .RegWriteW, .ResultSrcW, .IEUResultW, .ReadDataW, .RdW, .ImmExtW);
+            .RegWriteW, .ResultSrcW, .IEUResultW, .ReadDataW, .RdW, .ImmExtW, .RdM, .RegWriteM);
 
-    hazard hazard(.InstrD, .StallF, .StallD, .FlushD, .StallE, .FlushE, .StallM, .FlushM, .StallW, .FlushW, .ForwardAE, .ForwardBE);
+    hazard hazard(.InstrD,
+    .Rd1D, .Rd2D, .Rd1E, .Rd2E, .RdM, .RdW, .MemEnD, .MemEnE, .RegWriteM, .RegWriteW,
+    .StallF, .StallD, .FlushD, .StallE, .FlushE, .StallM, .FlushM, .StallW, .FlushW, .ForwardAE, .ForwardBE);
 
     // csr csr(.clk, .reset, .Instr, .BranchTaken(PCSrc), .WriteEn, .MemEn, .CSRResult);
 

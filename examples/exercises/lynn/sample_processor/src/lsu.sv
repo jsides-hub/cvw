@@ -32,13 +32,13 @@ module lsu(
         output  logic [31:0]    IEUResultW,
         output  logic [31:0]    ReadDataW,
         output  logic [4:0]     RdW,
-        output  logic [31:0]    ImmExtW
+        output  logic [31:0]    ImmExtW,
+        output  logic [4:0]     RdM,
+        output  logic           RegWriteM
     );
 
-    logic           RegWriteM;
     logic [2:0]     ResultSrcM;
     logic [31:0]    IEUResultM;
-    logic [4:0]     RdM;
     logic [31:0]    ImmExtM;
 
     flopenrc #(1) RegWriteEM(.clk, .reset, .Stall(StallM), .Flush(FlushM), .D(RegWriteE), .Q(RegWriteM));
