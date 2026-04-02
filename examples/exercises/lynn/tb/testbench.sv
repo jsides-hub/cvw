@@ -164,17 +164,17 @@ module testbench;
     .reset          (reset),
 
     // Instruction memory interface (byte address)
-    .PC             (PC),
-    .Instr          (Instr),
+    .PCF             (PC),
+    .InstrF          (Instr),
 
     // Data memory interface (byte address + strobes)
-    .IEUAdr         (DataAdr),
-    .ReadData       (ReadData),
-    .WriteData      (WriteData),
-    .MemEn          (MemEn),
-    .WriteEn        (WriteEn),
-    .WriteByteEn    (WriteByteEn),
-    .Funct3         (Funct3)
+    .IEUAdrM         (DataAdr),
+    .ReadDataM       (ReadData),
+    .WriteDataM      (WriteData),
+    .MemEnM          (MemEn),
+    .WriteEnM        (WriteEn),
+    .WriteByteEnM    (WriteByteEn),
+    .Funct3M         (Funct3)
   );
 
 /* ------- TOHOST Handling ------- */

@@ -21,27 +21,31 @@ module riscvsingle (
         output  logic [2:0]     Funct3M
     );
 
-    logic [31:0]    InstrD, PCD, ReadDataW, CSRResultW, ImmExtW, ImmExtE, FSrcBE, ResultW
-    logic [31:0]    IEUResultW, IEUResultM, IEUResultE, IEUAdrE
-    logic           RegWriteW, RegWriteE, MemEnE, PCSrcD
-    logic [2:0]     ResultSrcW, ResultSrcE, Funct3E
-    logic [4:0]     RdW, RdE
-    logic [3:0]     WriteByteEnE
+    logic [31:0]    InstrD, PCD, ReadDataW, CSRResultW, ImmExtW, ImmExtE, FSrcBE, ResultW;
+    logic [31:0]    IEUResultW, IEUResultM, IEUResultE, IEUAdrE;
+    logic           RegWriteW, RegWriteE, MemEnE, PCSrcD;
+    logic [2:0]     ResultSrcW, ResultSrcE, Funct3E;
+    logic [4:0]     RdW, RdE;
+    logic [3:0]     WriteByteEnE;
+    logic           StallF, StallD, FlushD, StallE, FlushE, StallM, FlushM, StallW, FlushW;
+    logic [1:0]     ForwardAE, ForwardBE;
 
-    ifu ifu()
+    ifu ifu(.clk, .reset, .PCSrcD, .IEUAdrE, .InstrF,
+            .StallF, .StallD, .FlushD,
+            .PCD, .PCF, .InstrD);
     ieu ieu(.clk, .reset, .InstrD, .PCD,
             .ForwardAE, .ForwardBE, .StallE, .FlushE,
             .RegWriteW, .ResultSrcW, .IEUResultW, .ReadDataW, .CSRResultW, .ImmExtW, .RdW, .IEUResultM,
             .RegWriteE, .ResultSrcE, .MemEnE, .IEUResultE, .IEUAdrE, .FSrcBE, .Funct3E, .RdE, .ImmExtE,
             .PCSrcD, .WriteByteEnE, .ResultW);
     lsu lsu(.clk, .reset, .RegWriteE, .ResultSrcE, .MemEnE, .WriteByteEnE, .IEUResultE, .IEUAdrE, .WriteDataE(FSrcBE), .Funct3E, .RdE, .ImmExtE,
-            .StallM, .FlushM, .StallW, .FlushW,
-            .IEUAdrM, .WriteDataM, MemEnM, .WriteByteEnM, .Funct3M,
-            .RegWriteW, .ResultSrcW, .IEUResultW, .ReadDataW, .RdW, .ImmExtW)
+            .StallM, .FlushM, .StallW, .FlushW, .ReadDataM,
+            .IEUAdrM, .WriteDataM, .MemEnM, .WriteByteEnM, .Funct3M,
+            .RegWriteW, .ResultSrcW, .IEUResultW, .ReadDataW, .RdW, .ImmExtW);
 
+    hazard hazard(.InstrD, .StallF, .StallD, .FlushD, .StallE, .FlushE, .StallM, .FlushM, .StallW, .FlushW, .ForwardAE, .ForwardBE);
 
-
-    csr csr(.clk, .reset, .Instr, .BranchTaken(PCSrc), .WriteEn, .MemEn, .CSRResult);
+    // csr csr(.clk, .reset, .Instr, .BranchTaken(PCSrc), .WriteEn, .MemEn, .CSRResult);
 
     assign WriteEnM = |WriteByteEnM;
 endmodule
