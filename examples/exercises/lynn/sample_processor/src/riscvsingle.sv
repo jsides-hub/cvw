@@ -25,10 +25,12 @@ module riscvsingle (
     logic PCSrc;
     logic Load;
 
-    ifu ifu(.clk, .reset, .PCSrc, .IEUAdr, .Result, .PC, .PCPlus4);
+    ifu ifu(.clk, .reset, .PCSrcE(PCSrc), .IEUAdrE(IEUAdr), .PCF(PC), .PCPlus4F(PCPlus4));
     ieu ieu(.clk, .reset, .Instr, .PC, .PCPlus4, .CSRResult, .PCSrc, .WriteByteEn,
             .IEUAdr, .WriteData, .ReadData, .MemEn, .Funct3, .Result
         );
+
+
     csr csr(.clk, .reset, .Instr, .BranchTaken(PCSrc), .WriteEn, .MemEn, .CSRResult);
 
     assign WriteEn = |WriteByteEn;
