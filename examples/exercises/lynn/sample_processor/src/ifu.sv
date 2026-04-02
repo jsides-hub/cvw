@@ -4,44 +4,34 @@
 
 module ifu(
         input   logic           clk, reset,
-        input   logic           RegWriteE,
-        input   logic [2:0]     ResultSrcE,
-        input   logic           MemEnE,
-        input   logic [31:0]    IEUResultE,
+        input   logic           PCSrcD,
         input   logic [31:0]    IEUAdrE,
-        input   logic [31:0]    WriteDataE,
-        input   logic [2:0]     Funct3E,
-        input   logic [4:0]     RdE,
-        input   logic [31:0]    ImmExtE,
-
-        input   logic           StallM,
-        input   logic           FlushM,
-        input   logic           StallW,
-        input   logic           FlushW,
-
-        output  logic [31:0]    IEUAdrM,
-        output  logic [31:0]    WriteDataM,
-        output  logic           MemEnM,
-        output  logic [2:0]     Funct3M,
-
-        output  logic           RegWriteW,
-        output  logic [2:0]     ResultSrcW,
-        output  logic [31:0]    IEUResultW,
-        output  logic [31:0]    ReadDataW,
-        output  logic [4:0]     RdW,
-        output  logic [31:0]    ImmExtW
+        input   logic [31:0]    InstrF,
+        input   logic           StallF, StallD, FlushD,
+        output  logic [31:0]    PCD, PCF, InstrD
     );
 
-    logic           RegWriteM;
-    logic [2:0]     ResultSrcM;
-    logic [4:0]     RdM;
-    logic [31:0]    ImmExtM;
+    logic [31:0] PCNext;
+    // next PC logic
+    logic [31:0] entry_addr;
+    logic [31:0] Target, PCNextF, PCPlus4F;
 
-    flopenrc RegWriteEM(.clk, .reset, ~StallM, FlushM, RegWriteE, RegWriteM);
-    flopenrc ResultSrcEM(.clk, .reset, ~StallM, FlushM, ResultSrcE, ResultSrcM);
-    flopenrc MemEnEM(.clk, .reset, ~StallM, FlushM, MemEnE, MemEnM);
+    initial begin
+        // default
+        entry_addr = '0;
 
+        // override if provided
+        void'($value$plusargs("ENTRY_ADDR=%h", entry_addr));
 
+        $display("[TB] ENTRY_ADDR = 0x%h", entry_addr);
+    end
+    assign Target = IEUAdrE & {{31{1'b1}}, 1'b0};
+    mux2 #(32) pcmux(PCPlus4F, Target, PCSrc, PCNext);
+    flopenrc #(32) PCWF(.clk, .reset, .Stall(StallF), .Flush(1'b0), .D(PCNextF), .Q(PCF));
 
+    adder pcadd4(PCF, 32'd4, PCPlus4F);
+
+    flopenrc #(32) PCFD(.clk, .reset, .Stall(StallD), .Flush(FlushD), .D(PCF), .Q(PCD));
+    flopenrc #(32) InstrFD(.clk, .reset, .Stall(StallD), .Flush(FlushD), .D(InstrF), .Q(InstrD));
 
 endmodule

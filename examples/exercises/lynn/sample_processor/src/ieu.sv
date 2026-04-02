@@ -41,10 +41,10 @@ module ieu(
     );
     logic EqD, LtD, LtuD;
     logic [2:0] Funct3D;
-    logic ALUResultSrcD,
+    logic ALUResultSrcD;
     logic [2:0] ResultSrcD;
     logic [3:0] WriteByteEnD;
-    logic [2:0] RegWriteD;
+    logic       RegWriteD;
     logic [1:0] ALUSrcD;
     logic [2:0] ImmSrcD;
     logic [1:0] ALUControlD;

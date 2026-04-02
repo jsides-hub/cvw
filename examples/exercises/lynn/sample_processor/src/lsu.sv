@@ -19,6 +19,7 @@ module lsu(
         input   logic           FlushM,
         input   logic           StallW,
         input   logic           FlushW,
+        input   logic [31:0]    ReadDataM,
 
         output  logic [31:0]    IEUAdrM,
         output  logic [31:0]    WriteDataM,
@@ -40,22 +41,22 @@ module lsu(
     logic [4:0]     RdM;
     logic [31:0]    ImmExtM;
 
-    flopenrc RegWriteEM(.clk, .reset, ~StallM, FlushM, RegWriteE, RegWriteM);
-    flopenrc ResultSrcEM(.clk, .reset, ~StallM, FlushM, ResultSrcE, ResultSrcM);
-    flopenrc MemEnEM(.clk, .reset, ~StallM, FlushM, MemEnE, MemEnM);
-    flopenrc WriteByteEnEM(.clk, .reset, ~StallM, FlushM, WriteByteEnE, WriteByteEnM);
-    flopenrc IEUResultEM(.clk, .reset, ~StallM, FlushM, IEUResultE, IEUResultM);
-    flopenrc IEUAdrEM(.clk, .reset, ~StallM, FlushM, IEUAdrE, IEUAdrM);
-    flopenrc WriteDataEM(.clk, .reset, ~StallM, FlushM, WriteDataE, WriteDataM);
-    flopenrc Funct3EM(.clk, .reset, ~StallM, FlushM, Funct3E, Funct3M);
-    flopenrc RdEM(.clk, .reset, ~StallM, FlushM, RdE, RdM);
-    flopenrc ImmExtEM(.clk, .reset, ~StallM, FlushM, ImmExtE, ImmExtM);
+    flopenrc #(1) RegWriteEM(.clk, .reset, .Stall(StallM), .Flush(FlushM), .D(RegWriteE), .Q(RegWriteM));
+    flopenrc #(3) ResultSrcEM(.clk, .reset, .Stall(StallM), .Flush(FlushM), .D(ResultSrcE), .Q(ResultSrcM));
+    flopenrc #(1) MemEnEM(.clk, .reset, .Stall(StallM), .Flush(FlushM), .D(MemEnE), .Q(MemEnM));
+    flopenrc #(4) WriteByteEnEM(.clk, .reset, .Stall(StallM), .Flush(FlushM), .D(WriteByteEnE), .Q(WriteByteEnM));
+    flopenrc #(32) IEUResultEM(.clk, .reset, .Stall(StallM), .Flush(FlushM), .D(IEUResultE), .Q(IEUResultM));
+    flopenrc #(32) IEUAdrEM(.clk, .reset, .Stall(StallM), .Flush(FlushM), .D(IEUAdrE), .Q(IEUAdrM));
+    flopenrc #(32) WriteDataEM(.clk, .reset, .Stall(StallM), .Flush(FlushM), .D(WriteDataE), .Q(WriteDataM));
+    flopenrc #(3) Funct3EM(.clk, .reset, .Stall(StallM), .Flush(FlushM), .D(Funct3E), .Q(Funct3M));
+    flopenrc #(5) RdEM(.clk, .reset, .Stall(StallM), .Flush(FlushM), .D(RdE), .Q(RdM));
+    flopenrc #(32) ImmExtEM(.clk, .reset, .Stall(StallM), .Flush(FlushM), .D(ImmExtE), .Q(ImmExtM));
 
-    flopenrc RegWriteMW(.clk, .reset, ~StallW, FlushW, RegWriteM, RegWriteW);
-    flopenrc ResultSrcMW(.clk, .reset, ~StallW, FlushW, ResultSrcM, ResultSrcW);
-    flopenrc IEUResultMW(.clk, .reset, ~StallW, FlushW, IEUResultM, IEUResultW);
-    flopenrc ReadDataMW(.clk, .reset, ~StallW, FlushW, ReadDataM, ReadDataW);
-    flopenrc RdMW(.clk, .reset, ~StallW, FlushW, RdM, RdW);
-    flopenrc ImmExtMW(.clk, .reset, ~StallW, FlushW, ImmExtM, ImmExtW);
+    flopenrc #(1) RegWriteMW(.clk, .reset, .Stall(StallM), .Flush(FlushM), .D(RegWriteM), .Q(RegWriteW));
+    flopenrc #(3) ResultSrcMW(.clk, .reset, .Stall(StallM), .Flush(FlushM), .D(ResultSrcM), .Q(ResultSrcW));
+    flopenrc #(32) IEUResultMW(.clk, .reset, .Stall(StallM), .Flush(FlushM), .D(IEUResultM), .Q(IEUResultW));
+    flopenrc #(32) ReadDataMW(.clk, .reset, .Stall(StallM), .Flush(FlushM), .D(ReadDataM), .Q(ReadDataW));
+    flopenrc #(5) RdMW(.clk, .reset, .Stall(StallM), .Flush(FlushM), .D(RdM), .Q(RdW));
+    flopenrc #(32) ImmExtMW(.clk, .reset, .Stall(StallM), .Flush(FlushM), .D(ImmExtM), .Q(ImmExtW));
 
 endmodule

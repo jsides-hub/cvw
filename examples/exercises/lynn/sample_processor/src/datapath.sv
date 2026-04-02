@@ -56,49 +56,49 @@ module datapath(
 
     // DE flop
 
-    flopenr Funct3DE(.clk, .reset, ~StallE, FlushE, Funct3D, Funct3E);
+    flopenrc #(3) Funct3DE(.clk, .reset, .Stall(StallE), .Flush(FlushE), .D(Funct3D), .Q(Funct3E));
     logic [31:0] PCE;
-    flopenr PCDE(.clk, .reset, ~StallE, FlushE, PCD, PCE);
+    flopenrc #(32) PCDE(.clk, .reset, .Stall(StallE), .Flush(FlushE), .D(PCD), .Q(PCE));
 
     logic ALUResultSrcE;
-    flopenr ALUResultSrcDE(.clk, .reset, ~StallE, FlushE, ALUResultSrcD, ALUResultSrcE);
+    flopenrc #(1) ALUResultSrcDE(.clk, .reset, .Stall(StallE), .Flush(FlushE), .D(ALUResultSrcD), .Q(ALUResultSrcE));
     logic [2:0] ResultSrcE;
-    flopenr ResultSrcDE(.clk, .reset, ~StallE, FlushE, ResultSrcD, ResultSrcE);
+    flopenrc #(3) ResultSrcDE(.clk, .reset, .Stall(StallE), .Flush(FlushE), .D(ResultSrcD), .Q(ResultSrcE));
     logic RegWriteE;
-    flopenr RegWriteDE(.clk, .reset, ~StallE, FlushE, RegWriteD, RegWriteE);
+    flopenrc #(1) RegWriteDE(.clk, .reset, .Stall(StallE), .Flush(FlushE), .D(RegWriteD), .Q(RegWriteE));
     logic [1:0] ALUSrcE;
-    flopenr ALUSrcDE(.clk, .reset, ~StallE, FlushE, ALUSrcD, ALUSrcE);
+    flopenrc #(2) ALUSrcDE(.clk, .reset, .Stall(StallE), .Flush(FlushE), .D(ALUSrcD), .Q(ALUSrcE));
     logic [2:0] ImmSrcE;
-    flopenr ImmSrcDE(.clk, .reset, ~StallE, FlushE, ImmSrcD, ImmSrcE);
+    flopenrc #(3) ImmSrcDE(.clk, .reset, .Stall(StallE), .Flush(FlushE), .D(ImmSrcD), .Q(ImmSrcE));
     logic [1:0] ALUControlE;
-    flopenr ALUControlDE(.clk, .reset, ~StallE, FlushE, ALUControlD, ALUControlE);
+    flopenrc #(2) ALUControlDE(.clk, .reset, .Stall(StallE), .Flush(FlushE), .D(ALUControlD), .Q(ALUControlE));
     logic MulE;
-    flopenr MulE(.clk, .reset, ~StallE, FlushE, MulD, MulE);
+    flopenrc #(1) MulDE(.clk, .reset, .Stall(StallE), .Flush(FlushE), .D(MulD), .Q(MulE));
     logic JumpE;
-    flopenr JumpE(.clk, .reset, ~StallE, FlushE, JumpD, JumpE);
+    flopenrc #(1) JumpDE(.clk, .reset, .Stall(StallE), .Flush(FlushE), .D(JumpD), .Q(JumpE));
 
-    logic [4:0] R1E;
-    flopenr R1DE(.clk, .reset, ~StallE, FlushE, R1D, R1E);
-    logic [4:0] R2E;
-    flopenr R2DE(.clk, .reset, ~StallE, FlushE, R2D, R2E);
-    flopenr RdDE(.clk, .reset, ~StallE, FlushE, RdD, RdE);
-    flopenr ImmExtDE(.clk, .reset, ~StallE, FlushE, ImmExtD, ImmExtE);
+    logic [31:0] R1E;
+    flopenrc #(32) R1DE(.clk, .reset, .Stall(StallE), .Flush(FlushE), .D(R1D), .Q(R1E));
+    logic [31:0] R2E;
+    flopenrc #(32) R2DE(.clk, .reset, .Stall(StallE), .Flush(FlushE), .D(R2D), .Q(R2E));
+    flopenrc #(5) RdDE(.clk, .reset, .Stall(StallE), .Flush(FlushE), .D(InstrD[11:7]), .Q(RdE));
+    flopenrc #(32) ImmExtDE(.clk, .reset, .Stall(StallE), .Flush(FlushE), .D(ImmExtD), .Q(ImmExtE));
 
 
     // ALU logic
     logic [31:0] FSrcAE;
-    mux4 #(32) aforwardmux(RD1E, ResultW, IEUResultM, 'x, ForwardAE, FSrcAE);
-    mux4 #(32) aforwardmux(RD2E, ResultW, IEUResultM, 'x, ForwardBE, FSrcBE);
+    mux4 #(32) aforwardmux(R1E, ResultW, IEUResultM, 'x, ForwardAE, FSrcAE);
+    mux4 #(32) bforwardmux(R2E, ResultW, IEUResultM, 'x, ForwardBE, FSrcBE);
 
     //TODO: Fix flags
-    cmp cmp(.R1(FSrcAE), .R2(FSrcBE), .EqD, .LtD, .LtuD);
+    cmp cmp(.R1(FSrcAE), .R2(FSrcBE), .Eq(EqD), .Lt(LtD), .Ltu(LtuD));
 
     logic [31:0] SrcAE, SrcBE;
     mux2 #(32) srcamux(FSrcAE, PCE, ALUSrcE[1], SrcAE);
     mux2 #(32) srcbmux(FSrcBE, ImmExtE, ALUSrcE[0], SrcBE);
 
     logic [31:0] ALUResultE;
-    alu alu(.SrcAE, .SrcBE, .ALUControlE, .Funct3E, .ALUResultE, .IEUAdrE);
+    alu alu(SrcAE, SrcBE, ALUControlE, Funct3E, ALUResultE, IEUAdrE);
 
     logic [31:0] PCLinkE;
     adder add4(PCE, 32'd4, PCLinkE);

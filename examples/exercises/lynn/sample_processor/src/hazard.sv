@@ -14,7 +14,9 @@ module hazard(
         output logic StallM,
         output logic FlushM,
         output logic StallW,
-        output logic FlushW
+        output logic FlushW,
+        output logic [1:0] ForwardAE,
+        output logic [1:0] ForwardBE
 );
 
 endmodule
