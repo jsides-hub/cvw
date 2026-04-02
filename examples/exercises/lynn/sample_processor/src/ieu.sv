@@ -6,35 +6,67 @@
 
 module ieu(
         input   logic           clk, reset,
-        input   logic [31:0]    Instr,
-        input   logic [31:0]    PC, PCPlus4,
-        input   logic [31:0]    CSRResult,
-        output  logic           PCSrc,
-        output  logic [3:0]     WriteByteEn,
-        output  logic [31:0]    IEUAdr, WriteData,
-        input   logic [31:0]    ReadData,
-        output  logic           MemEn,
-        output  logic [2:0]     Funct3,
-        output  logic[31:0]     Result
+        input   logic [31:0]    InstrD,
+        input   logic [31:0]    PCD,
+
+        input   logic [1:0]     ForwardAE,
+        input   logic [1:0]     ForwardBE,
+        input   logic           StallE,
+        input   logic           FlushE,
+
+        input   logic           RegWriteW,
+        input   logic [2:0]     ResultSrcW,
+        input   logic [31:0]    IEUResultW,
+        input   logic [31:0]    ReadDataW,
+        input   logic [31:0]    CSRResultW,
+        input   logic [31:0]    ImmExtW,
+        input   logic [4:0]     RdW,
+        input   logic [31:0]    IEUResultM,
+
+        output  logic           RegWriteE,
+        output  logic [2:0]     ResultSrcE,
+        output  logic           MemEnE,
+        output  logic [31:0]    IEUResultE,
+        output  logic [31:0]    IEUAdrE,
+        output  logic [31:0]    FSrcBE,
+        output  logic [2:0]     Funct3E,
+        output  logic [4:0]     RdE,
+        output  logic [31:0]    ImmExtE,
+
+        output  logic           PCSrcD,
+        output  logic [3:0]     WriteByteEnE,
+
+        output  logic [31:0]    ResultW
 
     );
+    logic EqD, LtD, LtuD;
+    logic [2:0] Funct3D;
+    logic ALUResultSrcD,
+    logic [2:0] ResultSrcD;
+    logic [3:0] WriteByteEnD;
+    logic [2:0] RegWriteD;
+    logic [1:0] ALUSrcD;
+    logic [2:0] ImmSrcD;
+    logic [1:0] ALUControlD;
+    logic       MemEnD;
+    logic       MulD;
+    logic       JumpD;
 
-    logic RegWrite, Jump, Eq, ALUResultSrc;
-    logic [1:0] ALUSrc;
-    logic [2:0]  ResultSrc, ImmSrc;
-    logic [1:0] ALUControl;
-    logic Lt, Ltu, IEUSrc, Mul;
-    assign Funct3 = Instr[14:12];
 
-    controller c(.Op(Instr[6:0]), .Funct3, .Funct7b5(Instr[30]), .Funct7b0(Instr[25]), .Mod(Instr[8:7]), .Eq, .Lt, .Ltu,
-        .ALUResultSrc, .ResultSrc, .WriteByteEn, .PCSrc,
-        .ALUSrc, .RegWrite, .ImmSrc, .ALUControl, .MemEn, .Mul
+    assign Funct3D = InstrD[14:12];
+
+    controller c(.OpD(InstrD[6:0]), .Funct3D, .Funct7b5D(InstrD[30]), .Funct7b0D(InstrD[25]), .EqD, .LtD, .LtuD,
+        .ALUResultSrcD, .ResultSrcD, .WriteByteEnD, .PCSrcD,
+        .RegWriteD, .ALUSrcD, .ImmSrcD, .ALUControlD, .MemEnD, .MulD, .JumpD
     `ifdef DEBUG
-        , .insn_debug(Instr)
+        , .insn_debug(InstrD)
     `endif
     );
 
-    datapath dp(.clk, .reset, .Funct3,
-        .ALUResultSrc, .ResultSrc, .ALUSrc, .RegWrite, .ImmSrc, .ALUControl, .CSRResult, .Mul, .Eq, .Lt, .Ltu,
-        .PC, .PCPlus4, .Instr, .IEUAdr, .WriteData, .Result, .ReadData);
+    datapath dp(.clk, .reset, .InstrD, .Funct3D, .PCD,
+                .ALUResultSrcD, .ResultSrcD, .RegWriteD, .ALUSrcD, .ImmSrcD, .ALUControlD, .MulD, .JumpD,
+                .ForwardAE, .ForwardBE, .StallE, .FlushE,
+                .ResultSrcW, .IEUResultM, .RdW,
+                .ReadDataW, .IEUResultW, .ImmExtW, .CSRResultW,
+                .EqD, .LtD, .LtuD, .Funct3E, .RdE, .ImmExtE, .FSrcBE, .IEUAdrE, .IEUResultE);
 endmodule

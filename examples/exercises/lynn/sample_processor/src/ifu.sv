@@ -4,34 +4,44 @@
 
 module ifu(
         input   logic           clk, reset,
-        input   logic           PCSrc,
-        input   logic [31:0]    IEUAdr, Result,
-        output  logic [31:0]    PC, PCPlus4
+        input   logic           RegWriteE,
+        input   logic [2:0]     ResultSrcE,
+        input   logic           MemEnE,
+        input   logic [31:0]    IEUResultE,
+        input   logic [31:0]    IEUAdrE,
+        input   logic [31:0]    WriteDataE,
+        input   logic [2:0]     Funct3E,
+        input   logic [4:0]     RdE,
+        input   logic [31:0]    ImmExtE,
+
+        input   logic           StallM,
+        input   logic           FlushM,
+        input   logic           StallW,
+        input   logic           FlushW,
+
+        output  logic [31:0]    IEUAdrM,
+        output  logic [31:0]    WriteDataM,
+        output  logic           MemEnM,
+        output  logic [2:0]     Funct3M,
+
+        output  logic           RegWriteW,
+        output  logic [2:0]     ResultSrcW,
+        output  logic [31:0]    IEUResultW,
+        output  logic [31:0]    ReadDataW,
+        output  logic [4:0]     RdW,
+        output  logic [31:0]    ImmExtW
     );
 
-    logic [31:0] PCNext;
-    // next PC logic
-    logic [31:0] entry_addr;
-    logic [31:0] Target;
+    logic           RegWriteM;
+    logic [2:0]     ResultSrcM;
+    logic [4:0]     RdM;
+    logic [31:0]    ImmExtM;
 
-    initial begin
-        // default
-        entry_addr = '0;
+    flopenrc RegWriteEM(.clk, .reset, ~StallM, FlushM, RegWriteE, RegWriteM);
+    flopenrc ResultSrcEM(.clk, .reset, ~StallM, FlushM, ResultSrcE, ResultSrcM);
+    flopenrc MemEnEM(.clk, .reset, ~StallM, FlushM, MemEnE, MemEnM);
 
-        // override if provided
-        void'($value$plusargs("ENTRY_ADDR=%h", entry_addr));
 
-        $display("[TB] ENTRY_ADDR = 0x%h", entry_addr);
-    end
 
-    always_ff @(posedge clk or posedge reset) begin
-        if (reset)  PC <= entry_addr;
-        else        PC <= PCNext;
-    end
 
-    adder pcadd4(PC, 32'd4, PCPlus4);
-
-    assign Target = IEUAdr & {{31{1'b1}}, 1'b0};
-
-    mux2 #(32) pcmux(PCPlus4, Target, PCSrc, PCNext);
 endmodule

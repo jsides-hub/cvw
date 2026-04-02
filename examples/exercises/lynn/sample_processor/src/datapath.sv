@@ -4,48 +4,109 @@
 
 module datapath(
         input   logic           clk, reset,
-        input   logic [2:0]     Funct3,
-        input   logic           ALUResultSrc,
-        input   logic [2:0]     ResultSrc,
-        input   logic [1:0]     ALUSrc,
-        input   logic           RegWrite,
-        input   logic [2:0]     ImmSrc,
-        input   logic [1:0]     ALUControl,
-        input   logic [31:0]    CSRResult,
-        input   logic           Mul,
-        output  logic           Eq,
-        output  logic           Lt,
-        output  logic           Ltu,
-        input   logic [31:0]    PC, PCPlus4,
-        input   logic [31:0]    Instr,
-        output  logic [31:0]    IEUAdr, WriteData, Result,
-        input   logic [31:0]    ReadData
+        input   logic [31:0]    InstrD,
+        input   logic [2:0]     Funct3D,
+        input   logic [31:0]    PCD,
+
+        input   logic           ALUResultSrcD,
+        input   logic [2:0]     ResultSrcD,
+        input   logic           RegWriteD,
+        input   logic [1:0]     ALUSrcD,
+        input   logic [2:0]     ImmSrcD,
+        input   logic [1:0]     ALUControlD,
+        input   logic           MulD,
+        input   logic           JumpD,
+
+        input   logic [1:0]     ForwardAE,
+        input   logic [1:0]     ForwardBE,
+        input   logic           StallE,
+        input   logic           FlushE,
+
+        input   logic [2:0]     ResultSrcW,
+        input   logic [31:0]    IEUResultM,
+        input   logic [4:0]     RdW,
+
+        input   logic [31:0]    ReadDataW,
+        input   logic [31:0]    IEUResultW,
+        input   logic [31:0]    ImmExtW,
+        input   logic [31:0]    CSRResultW,
+
+        output  logic           EqD,
+        output  logic           LtD,
+        output  logic           LtuD,
+        output  logic [2:0]     Funct3E,
+        output  logic [4:0]     RdE,
+        output  logic [31:0]    ImmExtE,
+        output  logic [31:0]    FSrcBE,
+        output  logic [31:0]    IEUAdrE,
+        output  logic [31:0]    IEUResultE
     );
 
-    logic [31:0] ImmExt, BranchRes;
-    logic [31:0] R1, R2, SrcA, SrcB, MulRes;
+    logic [31:0] ImmExtD, BranchRes;
+    logic [31:0] R1D, R2D, SrcA, SrcB, MulRes;
+    // logic [31:0] MulRes;
     logic [31:0] ALUResult, IEUResult;
 
     // register file logic
-    regfile rf(.clk, .WE3(RegWrite), .A1(Instr[19:15]), .A2(Instr[24:20]),
-        .A3(Instr[11:7]), .WD3(Result), .RD1(R1), .RD2(R2));
+    logic [31:0] ResultW;
+    regfile rf(.clk, .WE3(RegWriteW), .A1(InstrD[19:15]), .A2(InstrD[24:20]),
+        .A3(RdW), .WD3(ResultW), .RD1(R1D), .RD2(R2D));
 
-    extend ext(.Instr(Instr[31:7]), .ImmSrc, .ImmExt);
+    extend ext(.Instr(InstrD[31:7]), .ImmSrc(ImmSrcD), .ImmExt(ImmExtD));
+
+    // DE flop
+
+    flopenr Funct3DE(.clk, .reset, ~StallE, FlushE, Funct3D, Funct3E);
+    logic [31:0] PCE;
+    flopenr PCDE(.clk, .reset, ~StallE, FlushE, PCD, PCE);
+
+    logic ALUResultSrcE;
+    flopenr ALUResultSrcDE(.clk, .reset, ~StallE, FlushE, ALUResultSrcD, ALUResultSrcE);
+    logic [2:0] ResultSrcE;
+    flopenr ResultSrcDE(.clk, .reset, ~StallE, FlushE, ResultSrcD, ResultSrcE);
+    logic RegWriteE;
+    flopenr RegWriteDE(.clk, .reset, ~StallE, FlushE, RegWriteD, RegWriteE);
+    logic [1:0] ALUSrcE;
+    flopenr ALUSrcDE(.clk, .reset, ~StallE, FlushE, ALUSrcD, ALUSrcE);
+    logic [2:0] ImmSrcE;
+    flopenr ImmSrcDE(.clk, .reset, ~StallE, FlushE, ImmSrcD, ImmSrcE);
+    logic [1:0] ALUControlE;
+    flopenr ALUControlDE(.clk, .reset, ~StallE, FlushE, ALUControlD, ALUControlE);
+    logic MulE;
+    flopenr MulE(.clk, .reset, ~StallE, FlushE, MulD, MulE);
+    logic JumpE;
+    flopenr JumpE(.clk, .reset, ~StallE, FlushE, JumpD, JumpE);
+
+    logic [4:0] R1E;
+    flopenr R1DE(.clk, .reset, ~StallE, FlushE, R1D, R1E);
+    logic [4:0] R2E;
+    flopenr R2DE(.clk, .reset, ~StallE, FlushE, R2D, R2E);
+    flopenr RdDE(.clk, .reset, ~StallE, FlushE, RdD, RdE);
+    flopenr ImmExtDE(.clk, .reset, ~StallE, FlushE, ImmExtD, ImmExtE);
+
 
     // ALU logic
-    cmp cmp(.R1, .R2, .Eq, .Lt, .Ltu);
+    logic [31:0] FSrcAE;
+    mux4 #(32) aforwardmux(RD1E, ResultW, IEUResultM, 'x, ForwardAE, FSrcAE);
+    mux4 #(32) aforwardmux(RD2E, ResultW, IEUResultM, 'x, ForwardBE, FSrcBE);
 
-    mux2 #(32) srcamux(R1, PC, ALUSrc[1], SrcA);
-    mux2 #(32) srcbmux(R2, ImmExt, ALUSrc[0], SrcB);
+    //TODO: Fix flags
+    cmp cmp(.R1(FSrcAE), .R2(FSrcBE), .EqD, .LtD, .LtuD);
 
-    alu alu(.SrcA, .SrcB, .ALUControl, .Funct3, .ALUResult, .IEUAdr);
+    logic [31:0] SrcAE, SrcBE;
+    mux2 #(32) srcamux(FSrcAE, PCE, ALUSrcE[1], SrcAE);
+    mux2 #(32) srcbmux(FSrcBE, ImmExtE, ALUSrcE[0], SrcBE);
 
-    mux2 #(32) ieuresultmux(ALUResult, PCPlus4, ALUResultSrc, IEUResult);
+    logic [31:0] ALUResultE;
+    alu alu(.SrcAE, .SrcBE, .ALUControlE, .Funct3E, .ALUResultE, .IEUAdrE);
 
-    multiplier mul(.InputA(SrcA), .InputB(SrcB), .Con(Funct3[1:0]), .Result(MulRes));
+    logic [31:0] PCLinkE;
+    adder add4(PCE, 32'd4, PCLinkE);
 
-    mux6 #(32) resultmux(IEUResult, ReadData, ImmExt, CSRResult, MulRes, 'x, ResultSrc, Result);
+    logic [31:0] AltResultE;
+    mux2 #(32) jloc(ImmExtE, PCLinkE, JumpE, AltResultE);
 
-    assign WriteData = R2;
+    mux2 #(32) ieuresultmux(ALUResultE, AltResultE, ALUResultSrcE, IEUResultE);
 
+    mux6 #(32) resultmux(IEUResultW, ReadDataW, ImmExtW, CSRResultW, 'x, 'x, ResultSrcE, ResultW);
 endmodule
