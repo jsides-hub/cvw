@@ -5,7 +5,8 @@
 `include "parameters.svh"
 
 module hazard(
-        input   logic [31:0]    InstrD,
+        input   logic [31:0]    InstrF, InstrD,
+        input   logic           JumpE,
 
         input   logic [4:0]     Rd1D,
         input   logic [4:0]     Rd2D,
@@ -30,5 +31,16 @@ module hazard(
         output  logic [1:0]     ForwardAE,
         output  logic [1:0]     ForwardBE
 );
+        forward forward(.Rd1E, .Rd2E, .RdM, .RdW, .RegWriteM, .RegWriteW, .ForwardAE, .ForwardBE);
+        assign StallF =  (~JumpE) & ({InstrF[6:4], InstrF[2:0]} == 6'b110111); //TODO: Fix for jump -> jump
+        // assign StallF = 1'b0;
+        assign StallD = 1'b0;
+        assign StallE = 1'b0;
+        assign StallM = 1'b0;
+        assign StallW = 1'b0;
+        assign FlushD = 1'b0;
+        assign FlushE = 1'b0;
+        assign FlushM = 1'b0;
+        assign FlushW = 1'b0;
 
 endmodule

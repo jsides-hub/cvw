@@ -39,7 +39,8 @@ module ieu(
         output  logic [31:0]    ResultW,
 
         output  logic [4:0]     Rd1D, Rd2D, Rd1E, Rd2E,
-        output  logic           MemEnD
+        output  logic           MemEnD,
+        output  logic           JumpE
 
     );
     logic EqD, LtD, LtuD;
@@ -71,5 +72,5 @@ module ieu(
                 .ResultSrcW, .IEUResultM, .RdW,
                 .ReadDataW, .IEUResultW, .ImmExtW, .CSRResultW,
                 .EqD, .LtD, .LtuD, .Funct3E, .RdE, .ImmExtE, .FSrcBE, .IEUAdrE, .IEUResultE,
-                .Rd1D, .Rd2D, .Rd1E, .Rd2E);
+                .Rd1D, .Rd2D, .Rd1E, .Rd2E, .JumpE);
 endmodule

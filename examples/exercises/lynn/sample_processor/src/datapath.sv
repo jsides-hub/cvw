@@ -41,7 +41,8 @@ module datapath(
         output  logic [31:0]    IEUAdrE,
         output  logic [31:0]    IEUResultE,
 
-        output  logic [4:0]     Rd1D, Rd2D, Rd1E, Rd2E
+        output  logic [4:0]     Rd1D, Rd2D, Rd1E, Rd2E,
+        output  logic           JumpE
 
     );
 
@@ -83,7 +84,6 @@ module datapath(
     flopenrc #(2) ALUControlDE(.clk, .reset, .Stall(StallE), .Flush(FlushE), .D(ALUControlD), .Q(ALUControlE));
     logic MulE;
     flopenrc #(1) MulDE(.clk, .reset, .Stall(StallE), .Flush(FlushE), .D(MulD), .Q(MulE));
-    logic JumpE;
     flopenrc #(1) JumpDE(.clk, .reset, .Stall(StallE), .Flush(FlushE), .D(JumpD), .Q(JumpE));
 
     flopenrc #(32) R1DE(.clk, .reset, .Stall(StallE), .Flush(FlushE), .D(R1D), .Q(R1E));
