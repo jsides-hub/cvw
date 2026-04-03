@@ -11,7 +11,6 @@ module ifu(
         output  logic [31:0]    PCD, PCF, InstrD
     );
 
-    logic [31:0] PCNext;
     // next PC logic
     logic [31:0] entry_addr;
     logic [31:0] Target, PCNextF, PCPlus4F;
@@ -26,8 +25,12 @@ module ifu(
         $display("[TB] ENTRY_ADDR = 0x%h", entry_addr);
     end
     assign Target = IEUAdrE & {{31{1'b1}}, 1'b0};
-    mux2 #(32) pcmux(PCPlus4F, Target, PCSrc, PCNext);
-    flopenrc #(32) PCWF(.clk, .reset, .Stall(StallF), .Flush(1'b0), .D(PCNextF), .Q(PCF));
+    mux2 #(32) pcmux(PCPlus4F, Target, PCSrcD, PCNextF);
+
+    always_ff @(posedge clk or posedge reset) begin
+        if (reset)          PCF <= entry_addr;
+        else if (~StallF)   PCF <= PCNextF;
+    end
 
     adder pcadd4(PCF, 32'd4, PCPlus4F);
 

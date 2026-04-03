@@ -27,7 +27,7 @@ module riscvsingle (
     logic [2:0]     ResultSrcW, ResultSrcE, Funct3E;
     logic [4:0]     RdE, RdM, RdW;
     logic [3:0]     WriteByteEnE;
-    logic           StallF, StallD, FlushD, StallE, FlushE, StallM, FlushM, StallW, FlushW;
+    logic           StallF, StallD, FlushD, StallE, FlushE, StallM, FlushM, StallW, FlushW, JumpE;
     logic [1:0]     ForwardAE, ForwardBE;
     logic [4:0]     Rd1D, Rd2D, Rd1E, Rd2E;
 
@@ -39,13 +39,13 @@ module riscvsingle (
             .RegWriteW, .ResultSrcW, .IEUResultW, .ReadDataW, .CSRResultW, .ImmExtW, .RdW, .IEUResultM,
             .RegWriteE, .ResultSrcE, .MemEnE, .IEUResultE, .IEUAdrE, .FSrcBE, .Funct3E, .RdE, .ImmExtE,
             .PCSrcD, .WriteByteEnE, .ResultW,
-            .Rd1D, .Rd2D, .Rd1E, .Rd2E, .MemEnD);
+            .Rd1D, .Rd2D, .Rd1E, .Rd2E, .MemEnD, .JumpE);
     lsu lsu(.clk, .reset, .RegWriteE, .ResultSrcE, .MemEnE, .WriteByteEnE, .IEUResultE, .IEUAdrE, .WriteDataE(FSrcBE), .Funct3E, .RdE, .ImmExtE,
             .StallM, .FlushM, .StallW, .FlushW, .ReadDataM,
             .IEUAdrM, .WriteDataM, .MemEnM, .WriteByteEnM, .Funct3M,
             .RegWriteW, .ResultSrcW, .IEUResultW, .ReadDataW, .RdW, .ImmExtW, .RdM, .RegWriteM);
 
-    hazard hazard(.InstrD,
+    hazard hazard(.InstrF, .InstrD, .JumpE,
     .Rd1D, .Rd2D, .Rd1E, .Rd2E, .RdM, .RdW, .MemEnD, .MemEnE, .RegWriteM, .RegWriteW,
     .StallF, .StallD, .FlushD, .StallE, .FlushE, .StallM, .FlushM, .StallW, .FlushW, .ForwardAE, .ForwardBE);
 
