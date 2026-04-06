@@ -40,7 +40,7 @@ module riscvsingle (
             .RegWriteE, .ResultSrcE, .MemEnE, .IEUResultE, .IEUAdrE, .FSrcBE, .Funct3E, .RdE, .ImmExtE,
             .PCSrcD, .WriteByteEnE, .ResultW,
             .Rd1D, .Rd2D, .Rd1E, .Rd2E, .MemEnD, .JumpE);
-    lsu lsu(.clk, .reset, .RegWriteE, .ResultSrcE, .MemEnE, .WriteByteEnE, .IEUResultE, .IEUAdrE, .WriteDataE(FSrcBE), .Funct3E, .RdE, .ImmExtE,
+    lsu lsu(.clk, .reset, .RegWriteE, .ResultSrcE, .MemEnE, .WriteByteEnE, .IEUResultE, .IEUResultM, .IEUAdrE, .WriteDataE(FSrcBE), .Funct3E, .RdE, .ImmExtE,
             .StallM, .FlushM, .StallW, .FlushW, .ReadDataM,
             .IEUAdrM, .WriteDataM, .MemEnM, .WriteByteEnM, .Funct3M,
             .RegWriteW, .ResultSrcW, .IEUResultW, .ReadDataW, .RdW, .ImmExtW, .RdM, .RegWriteM);

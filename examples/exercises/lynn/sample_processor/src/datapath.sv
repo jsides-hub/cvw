@@ -16,6 +16,7 @@ module datapath(
         input   logic [1:0]     ALUControlD,
         input   logic           MulD,
         input   logic           JumpD,
+        input   logic           RegWriteW,
 
         input   logic [1:0]     ForwardAE,
         input   logic [1:0]     ForwardBE,
@@ -34,12 +35,15 @@ module datapath(
         output  logic           EqD,
         output  logic           LtD,
         output  logic           LtuD,
+        output  logic           RegWriteE,
         output  logic [2:0]     Funct3E,
+        output  logic [2:0]     ResultSrcE,
         output  logic [4:0]     RdE,
         output  logic [31:0]    ImmExtE,
         output  logic [31:0]    FSrcBE,
         output  logic [31:0]    IEUAdrE,
         output  logic [31:0]    IEUResultE,
+        output  logic [31:0]    ResultW,
 
         output  logic [4:0]     Rd1D, Rd2D, Rd1E, Rd2E,
         output  logic           JumpE
@@ -54,7 +58,6 @@ module datapath(
     // register file logic
     assign Rd1D = InstrD[19:15];
     assign Rd2D = InstrD[24:20];
-    logic [31:0] ResultW;
     logic [31:0] R1D, R2D, R1E, R2E;
     regfile rf(.clk, .WE3(RegWriteW), .A1(Rd1D), .A2(Rd2D),
         .A3(RdW), .WD3(ResultW), .RD1(R1D), .RD2(R2D));
@@ -72,9 +75,7 @@ module datapath(
 
     logic ALUResultSrcE;
     flopenrc #(1) ALUResultSrcDE(.clk, .reset, .Stall(StallE), .Flush(FlushE), .D(ALUResultSrcD), .Q(ALUResultSrcE));
-    logic [2:0] ResultSrcE;
     flopenrc #(3) ResultSrcDE(.clk, .reset, .Stall(StallE), .Flush(FlushE), .D(ResultSrcD), .Q(ResultSrcE));
-    logic RegWriteE;
     flopenrc #(1) RegWriteDE(.clk, .reset, .Stall(StallE), .Flush(FlushE), .D(RegWriteD), .Q(RegWriteE));
     logic [1:0] ALUSrcE;
     flopenrc #(2) ALUSrcDE(.clk, .reset, .Stall(StallE), .Flush(FlushE), .D(ALUSrcD), .Q(ALUSrcE));
@@ -115,5 +116,5 @@ module datapath(
 
     mux2 #(32) ieuresultmux(ALUResultE, AltResultE, ALUResultSrcE, IEUResultE);
 
-    mux6 #(32) resultmux(IEUResultW, ReadDataW, ImmExtW, CSRResultW, 'x, 'x, ResultSrcE, ResultW);
+    mux6 #(32) resultmux(IEUResultW, ReadDataW, ImmExtW, CSRResultW, 'x, 'x, ResultSrcW, ResultW);
 endmodule

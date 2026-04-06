@@ -22,6 +22,8 @@ module lsu(
         input   logic [31:0]    ReadDataM,
 
         output  logic [31:0]    IEUAdrM,
+        output   logic [31:0]   IEUResultM,
+
         output  logic [31:0]    WriteDataM,
         output  logic           MemEnM,
         output  logic [3:0]     WriteByteEnM,
@@ -38,7 +40,6 @@ module lsu(
     );
 
     logic [2:0]     ResultSrcM;
-    logic [31:0]    IEUResultM;
     logic [31:0]    ImmExtM;
 
     flopenrc #(1) RegWriteEM(.clk, .reset, .Stall(StallM), .Flush(FlushM), .D(RegWriteE), .Q(RegWriteM));
