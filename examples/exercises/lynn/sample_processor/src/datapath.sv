@@ -9,51 +9,51 @@ module datapath(
         input   logic [31:0]    PCD,
 
         input   logic           ALUResultSrcD,
-        input   logic [2:0]     ResultSrcD,
+        input   logic [1:0]     ResultSrcD,
         input   logic           RegWriteD,
         input   logic [1:0]     ALUSrcD,
         input   logic [2:0]     ImmSrcD,
         input   logic [1:0]     ALUControlD,
         input   logic           MulD,
         input   logic           JumpD,
+        input   logic           BranchD,
         input   logic           RegWriteW,
+        input   logic           MemEnD,
+        input   logic           AltSrcD,
 
         input   logic [1:0]     ForwardAE,
         input   logic [1:0]     ForwardBE,
         input   logic           StallE,
         input   logic           FlushE,
 
-        input   logic [2:0]     ResultSrcW,
+        input   logic [1:0]     ResultSrcW,
         input   logic [31:0]    IEUResultM,
         input   logic [4:0]     RdW,
 
         input   logic [31:0]    ReadDataW,
         input   logic [31:0]    IEUResultW,
-        input   logic [31:0]    ImmExtW,
         input   logic [31:0]    CSRResultW,
 
         output  logic           EqD,
         output  logic           LtD,
         output  logic           LtuD,
         output  logic           RegWriteE,
+        output  logic           MemEnE,
         output  logic [2:0]     Funct3E,
-        output  logic [2:0]     ResultSrcE,
+        output  logic [1:0]     ResultSrcE,
         output  logic [4:0]     RdE,
-        output  logic [31:0]    ImmExtE,
         output  logic [31:0]    FSrcBE,
         output  logic [31:0]    IEUAdrE,
         output  logic [31:0]    IEUResultE,
         output  logic [31:0]    ResultW,
 
         output  logic [4:0]     Rd1D, Rd2D, Rd1E, Rd2E,
-        output  logic           JumpE
+        output  logic           JumpE, BranchE
 
     );
 
-    logic [31:0] ImmExtD, BranchRes;
-    logic [31:0] SrcA, SrcB, MulRes;
+    logic [31:0] ImmExtD, ImmExtE;
     // logic [31:0] MulRes;
-    logic [31:0] ALUResult, IEUResult;
 
     // register file logic
     assign Rd1D = InstrD[19:15];
@@ -75,8 +75,10 @@ module datapath(
 
     logic ALUResultSrcE;
     flopenrc #(1) ALUResultSrcDE(.clk, .reset, .Stall(StallE), .Flush(FlushE), .D(ALUResultSrcD), .Q(ALUResultSrcE));
-    flopenrc #(3) ResultSrcDE(.clk, .reset, .Stall(StallE), .Flush(FlushE), .D(ResultSrcD), .Q(ResultSrcE));
+    flopenrc #(2) ResultSrcDE(.clk, .reset, .Stall(StallE), .Flush(FlushE), .D(ResultSrcD), .Q(ResultSrcE));
     flopenrc #(1) RegWriteDE(.clk, .reset, .Stall(StallE), .Flush(FlushE), .D(RegWriteD), .Q(RegWriteE));
+    flopenrc #(1) MemEnDE(.clk, .reset, .Stall(StallE), .Flush(FlushE), .D(MemEnD), .Q(MemEnE));
+
     logic [1:0] ALUSrcE;
     flopenrc #(2) ALUSrcDE(.clk, .reset, .Stall(StallE), .Flush(FlushE), .D(ALUSrcD), .Q(ALUSrcE));
     logic [2:0] ImmSrcE;
@@ -86,6 +88,8 @@ module datapath(
     logic MulE;
     flopenrc #(1) MulDE(.clk, .reset, .Stall(StallE), .Flush(FlushE), .D(MulD), .Q(MulE));
     flopenrc #(1) JumpDE(.clk, .reset, .Stall(StallE), .Flush(FlushE), .D(JumpD), .Q(JumpE));
+    flopenrc #(1) BranchDE(.clk, .reset, .Stall(StallE), .Flush(FlushE), .D(BranchD), .Q(BranchE));
+
 
     flopenrc #(32) R1DE(.clk, .reset, .Stall(StallE), .Flush(FlushE), .D(R1D), .Q(R1E));
     flopenrc #(32) R2DE(.clk, .reset, .Stall(StallE), .Flush(FlushE), .D(R2D), .Q(R2E));
@@ -112,9 +116,9 @@ module datapath(
     adder add4(PCE, 32'd4, PCLinkE);
 
     logic [31:0] AltResultE;
-    mux2 #(32) jloc(ImmExtE, PCLinkE, JumpE, AltResultE);
+    mux2 #(32) altresultmux(ImmExtE, PCLinkE, JumpE, AltResultE);
 
     mux2 #(32) ieuresultmux(ALUResultE, AltResultE, ALUResultSrcE, IEUResultE);
 
-    mux6 #(32) resultmux(IEUResultW, ReadDataW, ImmExtW, CSRResultW, 'x, 'x, ResultSrcW, ResultW);
+    mux4 #(32) resultmux(IEUResultW, ReadDataW, CSRResultW, 'x, ResultSrcW, ResultW);
 endmodule

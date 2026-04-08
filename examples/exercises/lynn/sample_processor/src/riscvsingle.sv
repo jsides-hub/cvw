@@ -21,13 +21,14 @@ module riscvsingle (
         output  logic [2:0]     Funct3M
     );
 
-    logic [31:0]    InstrD, PCD, ReadDataW, CSRResultW, ImmExtW, ImmExtE, FSrcBE, ResultW;
+    logic [31:0]    InstrD, PCD, ReadDataW, CSRResultW, FSrcBE, ResultW;
     logic [31:0]    IEUResultW, IEUResultM, IEUResultE, IEUAdrE;
     logic           RegWriteE, RegWriteM, RegWriteW, MemEnE, MemEnD, PCSrcD;
-    logic [2:0]     ResultSrcW, ResultSrcE, Funct3E;
+    logic [1:0]     ResultSrcW, ResultSrcE;
+    logic [2:0]     Funct3E;
     logic [4:0]     RdE, RdM, RdW;
     logic [3:0]     WriteByteEnE;
-    logic           StallF, StallD, FlushD, StallE, FlushE, StallM, FlushM, StallW, FlushW, JumpE;
+    logic           StallF, StallD, FlushD, StallE, FlushE, StallM, FlushM, StallW, FlushW, JumpE, BranchE;
     logic [1:0]     ForwardAE, ForwardBE;
     logic [4:0]     Rd1D, Rd2D, Rd1E, Rd2E;
 
@@ -36,17 +37,17 @@ module riscvsingle (
             .PCD, .PCF, .InstrD);
     ieu ieu(.clk, .reset, .InstrD, .PCD,
             .ForwardAE, .ForwardBE, .StallE, .FlushE,
-            .RegWriteW, .ResultSrcW, .IEUResultW, .ReadDataW, .CSRResultW, .ImmExtW, .RdW, .IEUResultM,
-            .RegWriteE, .ResultSrcE, .MemEnE, .IEUResultE, .IEUAdrE, .FSrcBE, .Funct3E, .RdE, .ImmExtE,
+            .RegWriteW, .ResultSrcW, .IEUResultW, .ReadDataW, .CSRResultW, .RdW, .IEUResultM,
+            .RegWriteE, .ResultSrcE, .MemEnE, .IEUResultE, .IEUAdrE, .FSrcBE, .Funct3E, .RdE,
             .PCSrcD, .WriteByteEnE, .ResultW,
-            .Rd1D, .Rd2D, .Rd1E, .Rd2E, .MemEnD, .JumpE);
-    lsu lsu(.clk, .reset, .RegWriteE, .ResultSrcE, .MemEnE, .WriteByteEnE, .IEUResultE, .IEUResultM, .IEUAdrE, .WriteDataE(FSrcBE), .Funct3E, .RdE, .ImmExtE,
+            .Rd1D, .Rd2D, .Rd1E, .Rd2E, .MemEnD, .JumpE, .BranchE);
+    lsu lsu(.clk, .reset, .RegWriteE, .ResultSrcE, .MemEnE, .WriteByteEnE, .IEUResultE, .IEUResultM, .IEUAdrE, .WriteDataE(FSrcBE), .Funct3E, .RdE,
             .StallM, .FlushM, .StallW, .FlushW, .ReadDataM,
             .IEUAdrM, .WriteDataM, .MemEnM, .WriteByteEnM, .Funct3M,
-            .RegWriteW, .ResultSrcW, .IEUResultW, .ReadDataW, .RdW, .ImmExtW, .RdM, .RegWriteM);
+            .RegWriteW, .ResultSrcW, .IEUResultW, .ReadDataW, .RdW, .RdM, .RegWriteM);
 
-    hazard hazard(.InstrF, .InstrD, .JumpE,
-    .Rd1D, .Rd2D, .Rd1E, .Rd2E, .RdM, .RdW, .MemEnD, .MemEnE, .RegWriteM, .RegWriteW,
+    hazard hazard(.InstrF, .InstrD, .JumpE, .BranchE,
+    .Rd1D, .Rd2D, .Rd1E, .Rd2E, .RdE, .RdM, .RdW, .MemEnD, .MemEnE, .RegWriteM, .RegWriteW,
     .StallF, .StallD, .FlushD, .StallE, .FlushE, .StallM, .FlushM, .StallW, .FlushW, .ForwardAE, .ForwardBE);
 
     // csr csr(.clk, .reset, .Instr, .BranchTaken(PCSrc), .WriteEn, .MemEn, .CSRResult);
