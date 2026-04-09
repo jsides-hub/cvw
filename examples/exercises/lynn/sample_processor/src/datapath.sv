@@ -17,6 +17,7 @@ module datapath(
         input   logic           MulD,
         input   logic           JumpD,
         input   logic           BranchD,
+        input   logic           LoadD,
         input   logic           RegWriteW,
         input   logic           MemEnD,
         input   logic           AltSrcD,
@@ -34,9 +35,7 @@ module datapath(
         input   logic [31:0]    IEUResultW,
         input   logic [31:0]    CSRResultW,
 
-        output  logic           EqD,
-        output  logic           LtD,
-        output  logic           LtuD,
+        output  logic           PCSrcE,
         output  logic           RegWriteE,
         output  logic           MemEnE,
         output  logic [2:0]     Funct3E,
@@ -48,7 +47,7 @@ module datapath(
         output  logic [31:0]    ResultW,
 
         output  logic [4:0]     Rd1D, Rd2D, Rd1E, Rd2E,
-        output  logic           JumpE, BranchE
+        output  logic           JumpE, BranchE, LoadE
 
     );
 
@@ -89,6 +88,7 @@ module datapath(
     flopenrc #(1) MulDE(.clk, .reset, .Stall(StallE), .Flush(FlushE), .D(MulD), .Q(MulE));
     flopenrc #(1) JumpDE(.clk, .reset, .Stall(StallE), .Flush(FlushE), .D(JumpD), .Q(JumpE));
     flopenrc #(1) BranchDE(.clk, .reset, .Stall(StallE), .Flush(FlushE), .D(BranchD), .Q(BranchE));
+    flopenrc #(1) LoadDE(.clk, .reset, .Stall(StallE), .Flush(FlushE), .D(LoadD), .Q(LoadE));
 
 
     flopenrc #(32) R1DE(.clk, .reset, .Stall(StallE), .Flush(FlushE), .D(R1D), .Q(R1E));
@@ -103,7 +103,9 @@ module datapath(
     mux4 #(32) bforwardmux(R2E, ResultW, IEUResultM, 'x, ForwardBE, FSrcBE);
 
     //TODO: Fix flags
-    cmp cmp(.R1(FSrcAE), .R2(FSrcBE), .Eq(EqD), .Lt(LtD), .Ltu(LtuD));
+    cmp cmp(.R1(FSrcAE), .R2(FSrcBE), .Eq(EqE), .Lt(LtE), .Ltu(LtuE));
+
+    executecontroller econ(.BranchE, .JumpE, .Funct3E, .EqE, .LtE, .LtuE, .PCSrcE);
 
     logic [31:0] SrcAE, SrcBE;
     mux2 #(32) srcamux(FSrcAE, PCE, ALUSrcE[1], SrcAE);

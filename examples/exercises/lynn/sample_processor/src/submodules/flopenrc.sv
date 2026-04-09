@@ -15,7 +15,7 @@ module flopenrc #(parameter WIDTH, parameter DEFAULT = 0) (
 
     always_ff @(posedge clk, posedge reset) begin
         if (reset)      Q <= DEFAULT;
-        else if (Flush)   Q <= 32'b0;
+        else if (Flush) Q <= 32'b0;
         else if (En)    Q <= D;
     end
 

@@ -6,7 +6,7 @@
 
 module hazard(
         input   logic [31:0]    InstrF, InstrD,
-        input   logic           JumpE, BranchE,
+        input   logic           PCSrcE,
 
         input   logic [4:0]     Rd1D,
         input   logic [4:0]     Rd2D,
@@ -17,6 +17,8 @@ module hazard(
         input   logic [4:0]     RdW,
         input   logic           MemEnD,
         input   logic           MemEnE,
+        input   logic           LoadD,
+        input   logic           LoadE,
         input   logic           RegWriteM,
         input   logic           RegWriteW,
 
@@ -33,18 +35,17 @@ module hazard(
         output  logic [1:0]     ForwardBE
 );
         forward forward(.Rd1E, .Rd2E, .RdM, .RdW, .RegWriteM, .RegWriteW, .ForwardAE, .ForwardBE);
-        logic JumpBranch, LoadUseHazard;
-        assign JumpBranch = (~JumpE) & ({InstrF[6:4], InstrF[2:0]} == 6'b110111);
-        assign LoadUseHazard = (((Rd1D == RdE) & (Rd1D != RdM)) | ((Rd2D == RdE) & (Rd2D != RdM))) & (InstrD[6:0] == 7'b0000011);
 
-        assign StallF =  JumpBranch | LoadUseHazard; //TODO: Fix for jump -> jump
-        assign StallD = LoadUseHazard;
-        // Stall F and D when load/use error - R1D or R2D equals RdE but not RdM TODO: update for when consec instructions have same Rd
+        assign StallF = LoadD & (~LoadE);
+        // assign StallF = (~JumpE) & ({InstrF[6:4], InstrF[2:0]} == 6'b110111);
+        assign StallD = LoadD & (~LoadE); // Stalls on first instance of a load
+        // assign StallD = 1'b0;
         assign StallE = 1'b0;
         assign StallM = 1'b0;
         assign StallW = 1'b0;
-        assign FlushD = 1'b0;
-        assign FlushE = 1'b0;
+        assign FlushD = PCSrcE;
+        // assign FlushE = PCSrcE;
+        assign FlushE = PCSrcE | (LoadD & LoadE); // Flushes later instance of a load (from stall)
         assign FlushM = 1'b0;
         assign FlushW = 1'b0;
 

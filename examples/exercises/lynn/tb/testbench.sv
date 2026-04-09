@@ -64,6 +64,7 @@ module testbench;
       //         MemEn
       //         );
       $display("PC: %h \t Instr: %h", PC, Instr);
+      $display("LoadD: %h, LoadE: %h", dut.hazard.LoadD, dut.hazard.LoadD);
       // $display("DataAdr: %h, t0: %h, t1: %h, t2: %h, t3: %h", DataAdr, dut.ieu.dp.rf.rf[5], dut.ieu.dp.rf.rf[6], dut.ieu.dp.rf.rf[7], dut.ieu.dp.rf.rf[28]);
       // $display("DataAdr: %h", DataAdr);
 

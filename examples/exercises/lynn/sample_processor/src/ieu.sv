@@ -31,17 +31,16 @@ module ieu(
         output  logic [2:0]     Funct3E,
         output  logic [4:0]     RdE,
 
-        output  logic           PCSrcD,
+        output  logic           PCSrcE,
         output  logic [3:0]     WriteByteEnE,
 
         output  logic [31:0]    ResultW,
 
         output  logic [4:0]     Rd1D, Rd2D, Rd1E, Rd2E,
         output  logic           MemEnD,
-        output  logic           JumpE, BranchE
+        output  logic           JumpE, BranchE, LoadD, LoadE
 
     );
-    logic EqD, LtD, LtuD;
     logic [2:0] Funct3D;
     logic ALUResultSrcD;
     logic [1:0] ResultSrcD;
@@ -56,19 +55,19 @@ module ieu(
 
     assign Funct3D = InstrD[14:12];
 
-    controller c(.OpD(InstrD[6:0]), .Funct3D, .Funct7b5D(InstrD[30]), .Funct7b0D(InstrD[25]), .EqD, .LtD, .LtuD,
-        .ALUResultSrcD, .ResultSrcD, .WriteByteEnD, .PCSrcD,
-        .RegWriteD, .ALUSrcD, .ImmSrcD, .ALUControlD, .MemEnD, .MulD, .JumpD, .BranchD, .AltSrcD
+    controller c(.OpD(InstrD[6:0]), .Funct3D, .Funct7b5D(InstrD[30]), .Funct7b0D(InstrD[25]),
+        .ALUResultSrcD, .ResultSrcD, .WriteByteEnD,
+        .RegWriteD, .ALUSrcD, .ImmSrcD, .ALUControlD, .MemEnD, .MulD, .JumpD, .BranchD, .AltSrcD, .LoadD
     `ifdef DEBUG
         , .insn_debug(InstrD)
     `endif
     );
 
     datapath dp(.clk, .reset, .InstrD, .Funct3D, .PCD,
-                .ALUResultSrcD, .ResultSrcD, .RegWriteD, .ALUSrcD, .ImmSrcD, .ALUControlD, .MulD, .JumpD, .BranchD, .RegWriteW, .MemEnD, .AltSrcD,
+                .ALUResultSrcD, .ResultSrcD, .RegWriteD, .ALUSrcD, .ImmSrcD, .ALUControlD, .MulD, .JumpD, .BranchD, .LoadD, .RegWriteW, .MemEnD, .AltSrcD,
                 .ForwardAE, .ForwardBE, .StallE, .FlushE,
                 .ResultSrcW, .IEUResultM, .RdW,
                 .ReadDataW, .IEUResultW, .CSRResultW,
-                .EqD, .LtD, .LtuD, .RegWriteE, .MemEnE, .Funct3E, .ResultSrcE, .RdE, .FSrcBE, .IEUAdrE, .IEUResultE, .ResultW,
-                .Rd1D, .Rd2D, .Rd1E, .Rd2E, .JumpE, .BranchE);
+                .PCSrcE, .RegWriteE, .MemEnE, .Funct3E, .ResultSrcE, .RdE, .FSrcBE, .IEUAdrE, .IEUResultE, .ResultW,
+                .Rd1D, .Rd2D, .Rd1E, .Rd2E, .JumpE, .BranchE, .LoadE);
 endmodule

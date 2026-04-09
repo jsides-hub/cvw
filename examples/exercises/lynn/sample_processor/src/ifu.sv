@@ -4,7 +4,7 @@
 
 module ifu(
         input   logic           clk, reset,
-        input   logic           PCSrcD,
+        input   logic           PCSrcE,
         input   logic [31:0]    IEUAdrE,
         input   logic [31:0]    InstrF,
         input   logic           StallF, StallD, FlushD,
@@ -25,7 +25,7 @@ module ifu(
         $display("[TB] ENTRY_ADDR = 0x%h", entry_addr);
     end
     assign Target = IEUAdrE & {{31{1'b1}}, 1'b0};
-    mux2 #(32) pcmux(PCPlus4F, Target, PCSrcD, PCNextF);
+    mux2 #(32) pcmux(PCPlus4F, Target, PCSrcE, PCNextF);
 
     always_ff @(posedge clk or posedge reset) begin
         if (reset)          PCF <= entry_addr;
