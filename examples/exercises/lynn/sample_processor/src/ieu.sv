@@ -64,10 +64,10 @@ module ieu(
     );
 
     datapath dp(.clk, .reset, .InstrD, .Funct3D, .PCD,
-                .ALUResultSrcD, .ResultSrcD, .RegWriteD, .ALUSrcD, .ImmSrcD, .ALUControlD, .MulD, .JumpD, .BranchD, .LoadD, .RegWriteW, .MemEnD, .AltSrcD,
+                .ALUResultSrcD, .ResultSrcD, .RegWriteD, .ALUSrcD, .ImmSrcD, .ALUControlD, .MulD, .JumpD, .BranchD, .LoadD, .RegWriteW, .MemEnD, .WriteByteEnD, .AltSrcD,
                 .ForwardAE, .ForwardBE, .StallE, .FlushE,
                 .ResultSrcW, .IEUResultM, .RdW,
                 .ReadDataW, .IEUResultW, .CSRResultW,
-                .PCSrcE, .RegWriteE, .MemEnE, .Funct3E, .ResultSrcE, .RdE, .FSrcBE, .IEUAdrE, .IEUResultE, .ResultW,
+                .PCSrcE, .RegWriteE, .MemEnE, .WriteByteEnE, .Funct3E, .ResultSrcE, .RdE, .FSrcBE, .IEUAdrE, .IEUResultE, .ResultW,
                 .Rd1D, .Rd2D, .Rd1E, .Rd2E, .JumpE, .BranchE, .LoadE);
 endmodule

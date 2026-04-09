@@ -20,6 +20,7 @@ module datapath(
         input   logic           LoadD,
         input   logic           RegWriteW,
         input   logic           MemEnD,
+        input   logic [3:0]     WriteByteEnD,
         input   logic           AltSrcD,
 
         input   logic [1:0]     ForwardAE,
@@ -38,6 +39,7 @@ module datapath(
         output  logic           PCSrcE,
         output  logic           RegWriteE,
         output  logic           MemEnE,
+        output   logic [3:0]    WriteByteEnE,
         output  logic [2:0]     Funct3E,
         output  logic [1:0]     ResultSrcE,
         output  logic [4:0]     RdE,
@@ -77,6 +79,8 @@ module datapath(
     flopenrc #(2) ResultSrcDE(.clk, .reset, .Stall(StallE), .Flush(FlushE), .D(ResultSrcD), .Q(ResultSrcE));
     flopenrc #(1) RegWriteDE(.clk, .reset, .Stall(StallE), .Flush(FlushE), .D(RegWriteD), .Q(RegWriteE));
     flopenrc #(1) MemEnDE(.clk, .reset, .Stall(StallE), .Flush(FlushE), .D(MemEnD), .Q(MemEnE));
+    flopenrc #(4) WriteByteEnDE(.clk, .reset, .Stall(StallE), .Flush(FlushE), .D(WriteByteEnD), .Q(WriteByteEnE));
+
 
     logic [1:0] ALUSrcE;
     flopenrc #(2) ALUSrcDE(.clk, .reset, .Stall(StallE), .Flush(FlushE), .D(ALUSrcD), .Q(ALUSrcE));
