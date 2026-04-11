@@ -19,6 +19,7 @@ module hazard(
         input   logic           MemEnE,
         input   logic           LoadD,
         input   logic           LoadE,
+        input   logic           LoadM,
         input   logic           RegWriteM,
         input   logic           RegWriteW,
 
@@ -36,17 +37,19 @@ module hazard(
 );
         forward forward(.Rd1E, .Rd2E, .RdM, .RdW, .RegWriteM, .RegWriteW, .ForwardAE, .ForwardBE);
 
-        assign StallF = LoadD & (~LoadE);
+        assign StallF = LoadE & (~LoadM);
         // assign StallF = (~JumpE) & ({InstrF[6:4], InstrF[2:0]} == 6'b110111);
-        assign StallD = LoadD & (~LoadE); // Stalls on first instance of a load
+        assign StallD = LoadE & (~LoadM); // Stalls on first instance of a load
         // assign StallD = 1'b0;
-        assign StallE = 1'b0;
+        assign StallE = LoadE & (~LoadM);
         assign StallM = 1'b0;
         assign StallW = 1'b0;
+        // assign FlushD = 1'b0;
         assign FlushD = PCSrcE;
         // assign FlushE = PCSrcE;
-        assign FlushE = PCSrcE | (LoadD & LoadE); // Flushes later instance of a load (from stall)
-        assign FlushM = 1'b0;
+        assign FlushE = PCSrcE; // Flushes later instance of a load (from stall)
+        // assign FlushE = PCSrcE; // Flushes later instance of a load (from stall)
+        assign FlushM = (LoadE & LoadM);
         assign FlushW = 1'b0;
 
 endmodule

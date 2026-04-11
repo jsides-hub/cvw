@@ -36,10 +36,11 @@ module datapath(
         input   logic [31:0]    IEUResultW,
         input   logic [31:0]    CSRResultW,
 
+        output  logic [31:0]    PCE,
         output  logic           PCSrcE,
         output  logic           RegWriteE,
         output  logic           MemEnE,
-        output   logic [3:0]    WriteByteEnE,
+        output  logic [3:0]     WriteByteEnE,
         output  logic [2:0]     Funct3E,
         output  logic [1:0]     ResultSrcE,
         output  logic [4:0]     RdE,
@@ -68,7 +69,6 @@ module datapath(
     // DE flop
 
     flopenrc #(3) Funct3DE(.clk, .reset, .Stall(StallE), .Flush(FlushE), .D(Funct3D), .Q(Funct3E));
-    logic [31:0] PCE;
     flopenrc #(32) PCDE(.clk, .reset, .Stall(StallE), .Flush(FlushE), .D(PCD), .Q(PCE));
 
     flopenrc #(5) Rd1DE(.clk, .reset, .Stall(StallE), .Flush(FlushE), .D(Rd1D), .Q(Rd1E));

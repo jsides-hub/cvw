@@ -22,6 +22,7 @@ module ieu(
         input   logic [4:0]     RdW,
         input   logic [31:0]    IEUResultM,
 
+        output  logic [31:0]    PCE,
         output  logic           RegWriteE,
         output  logic [1:0]     ResultSrcE,
         output  logic           MemEnE,
@@ -68,6 +69,6 @@ module ieu(
                 .ForwardAE, .ForwardBE, .StallE, .FlushE,
                 .ResultSrcW, .IEUResultM, .RdW,
                 .ReadDataW, .IEUResultW, .CSRResultW,
-                .PCSrcE, .RegWriteE, .MemEnE, .WriteByteEnE, .Funct3E, .ResultSrcE, .RdE, .FSrcBE, .IEUAdrE, .IEUResultE, .ResultW,
+                .PCE, .PCSrcE, .RegWriteE, .MemEnE, .WriteByteEnE, .Funct3E, .ResultSrcE, .RdE, .FSrcBE, .IEUAdrE, .IEUResultE, .ResultW,
                 .Rd1D, .Rd2D, .Rd1E, .Rd2E, .JumpE, .BranchE, .LoadE);
 endmodule
