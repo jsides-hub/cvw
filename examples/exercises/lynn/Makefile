@@ -25,11 +25,11 @@ SYNTH_TOP 			?= $(PROCESSOR_TOP) # change to different module to find critical p
 # ----    Coremark Configuration ---- #
 
 #ARCH := rv$(XLEN)im_zicsr_zba_zbb_zbs
-ARCH := rv$(XLEN)gc
+#ARCH := rv$(XLEN)gc
 #ARCH := rv$(XLEN)imc_zicsr
 #ARCH := rv$(XLEN)im_zicsr
 #ARCH := rv$(XLEN)i_zicsr_zmmul
-#ARCH := rv$(XLEN)i_zicsr
+ARCH := rv$(XLEN)i_zicsr
 
 # ---- Command line optional parameters ---- #
 ELFS 				?=

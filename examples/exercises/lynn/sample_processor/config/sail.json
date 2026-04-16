@@ -144,7 +144,7 @@
   },
   "extensions": {
     "M": {
-      "supported": true
+      "supported": false
     },
     "A": {
       "supported": false
@@ -195,7 +195,7 @@
       "supported": true
     },
     "Zicsr": {
-      "supported": true
+      "supported": false
     },
     "Zifencei": {
       "supported": false
@@ -213,7 +213,7 @@
       "supported": false
     },
     "Zmmul": {
-      "supported": true
+      "supported": false
     },
     "Zaamo": {
       "supported": false
