@@ -5,7 +5,6 @@
 `include "parameters.svh"
 
 module hazard(
-        input   logic [31:0]    InstrF, InstrD,
         input   logic           PCSrcE,
 
         input   logic [4:0]     Rd1D,
@@ -19,6 +18,8 @@ module hazard(
         input   logic           MemEnE,
         input   logic           LoadE,
         input   logic           LoadM,
+        input   logic           CSROpE,
+        input   logic           CSROpM,
         input   logic           RegWriteM,
         input   logic           RegWriteW,
 
@@ -37,14 +38,17 @@ module hazard(
         forward forward(.Rd1E, .Rd2E, .RdM, .RdW, .RegWriteM, .RegWriteW, .ForwardAE, .ForwardBE);
 
 
-        assign StallF = LoadE & (~LoadM); // Stalls on first instance of a load
-        assign StallD = LoadE & (~LoadM); // Stalls on first instance of a load
-        assign StallE = LoadE & (~LoadM); // Stalls on first instance of a load
+        assign StallF = (LoadE & (~LoadM)) | (CSROpE & (~CSROpM)); // Stalls on first instance of a load
+        // assign StallF = LoadE & (~LoadM);
+        assign StallD = (LoadE & (~LoadM)) | (CSROpE & (~CSROpM)); // Stalls on first instance of a load
+        // assign StallD = LoadE & (~LoadM);
+        assign StallE = (LoadE & (~LoadM)) | (CSROpE & (~CSROpM)); // Stalls on first instance of a load
+        // assign StallE = LoadE & (~LoadM);
         assign StallM = 1'b0;
         assign StallW = 1'b0;
         assign FlushD = PCSrcE;
         assign FlushE = PCSrcE;
-        assign FlushM = (LoadE & LoadM); // Flushes later instance of a load (from stall)
+        assign FlushM = (LoadE & LoadM) | (CSROpE & CSROpM); // Flushes later instance of a load (from stall)
         assign FlushW = 1'b0;
 
 endmodule

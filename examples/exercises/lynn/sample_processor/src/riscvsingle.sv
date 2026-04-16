@@ -31,7 +31,7 @@ module riscvsingle (
     logic           StallF, StallD, FlushD, StallE, FlushE, StallM, FlushM, StallW, FlushW, JumpE, BranchE;
     logic [1:0]     ForwardAE, ForwardBE;
     logic [4:0]     Rd1D, Rd2D, Rd1E, Rd2E;
-    logic           LoadE, LoadM;
+    logic           LoadE, LoadM, CSROpE, CSROpM;
 
     ifu ifu(.clk, .reset, .PCSrcE, .IEUAdrE, .InstrF,
             .StallF, .StallD, .FlushD,
@@ -41,19 +41,19 @@ module riscvsingle (
             .RegWriteW, .ResultSrcW, .IEUResultW, .ReadDataW, .CSRResultW, .RdW, .IEUResultM,
             .RegWriteE, .ResultSrcE, .MemEnE, .IEUResultE, .IEUAdrE, .FSrcBE, .Funct3E, .RdE,
             .PCE, .PCSrcE, .WriteByteEnE, .ResultW,
-            .Rd1D, .Rd2D, .Rd1E, .Rd2E, .MemEnD, .JumpE, .BranchE, .LoadE, .ALUControlE);
-    lsu lsu(.clk, .reset, .PCE, .RegWriteE, .ResultSrcE, .MemEnE, .WriteByteEnE, .IEUResultE, .IEUResultM, .IEUAdrE, .WriteDataE(FSrcBE), .Funct3E, .RdE, .LoadE,
+            .Rd1D, .Rd2D, .Rd1E, .Rd2E, .MemEnD, .JumpE, .BranchE, .LoadE, .CSROpE, .ALUControlE);
+    lsu lsu(.clk, .reset, .PCE, .RegWriteE, .ResultSrcE, .MemEnE, .WriteByteEnE, .IEUResultE, .IEUResultM, .IEUAdrE, .WriteDataE(FSrcBE), .Funct3E, .RdE, .LoadE, .CSROpE,
             .StallM, .FlushM, .StallW, .FlushW, .ReadDataM,
             .IEUAdrM, .WriteDataM, .MemEnM, .WriteByteEnM, .Funct3M,
-            .RegWriteW, .ResultSrcW, .IEUResultW, .ReadDataW, .RdW, .RdM, .LoadM, .RegWriteM);
+            .RegWriteW, .ResultSrcW, .IEUResultW, .ReadDataW, .RdW, .RdM, .LoadM, .CSROpM, .RegWriteM);
 
-    hazard hazard(.InstrF, .InstrD, .PCSrcE,
-    .Rd1D, .Rd2D, .Rd1E, .Rd2E, .RdE, .RdM, .RdW, .MemEnD, .MemEnE, .LoadE, .LoadM, .RegWriteM, .RegWriteW,
+    hazard hazard(.PCSrcE,
+    .Rd1D, .Rd2D, .Rd1E, .Rd2E, .RdE, .RdM, .RdW, .MemEnD, .MemEnE, .LoadE, .LoadM, .CSROpE, .CSROpM, .RegWriteM, .RegWriteW,
     .StallF, .StallD, .FlushD, .StallE, .FlushE, .StallM, .FlushM, .StallW, .FlushW, .ForwardAE, .ForwardBE);
 
 //TODO: InstRetW, BranchTakenE,
-    csr csr(.clk, .reset, .CSRVal(IEUResultE[11:0]), .Funct3E, .ResultSrcE, .ALUControlE,
-    .InstRetW(1'b0), .BranchEvalE(BranchE), .BranchTakenE(BranchE), .JumpE, .WriteEnM, .MemEnM, .CSRResultW);
+    csr csr(.clk, .reset, .StallM, .FlushM, .StallW, .FlushW, .CSRVal(IEUResultE[11:0]), .Funct3E, .ResultSrcE, .ALUControlE,
+    .InstRetW(ResultW != 32'b0), .BranchEvalE(BranchE), .BranchTakenE(BranchE), .JumpE, .WriteEnM, .MemEnM, .CSRResultW);
 
     assign WriteEnM = |WriteByteEnM;
 endmodule

@@ -18,6 +18,7 @@ module datapath(
         input   logic           JumpD,
         input   logic           BranchD,
         input   logic           LoadD,
+        input   logic           CSROpD,
         input   logic           RegWriteW,
         input   logic           MemEnD,
         input   logic [3:0]     WriteByteEnD,
@@ -50,7 +51,7 @@ module datapath(
         output  logic [31:0]    ResultW,
 
         output  logic [4:0]     Rd1D, Rd2D, Rd1E, Rd2E,
-        output  logic           JumpE, BranchE, LoadE,
+        output  logic           JumpE, BranchE, LoadE, CSROpE,
         output  logic [1:0]     ALUControlE
 
     );
@@ -93,6 +94,7 @@ module datapath(
     flopenrc #(1) JumpDE(.clk, .reset, .Stall(StallE), .Flush(FlushE), .D(JumpD), .Q(JumpE));
     flopenrc #(1) BranchDE(.clk, .reset, .Stall(StallE), .Flush(FlushE), .D(BranchD), .Q(BranchE));
     flopenrc #(1) LoadDE(.clk, .reset, .Stall(StallE), .Flush(FlushE), .D(LoadD), .Q(LoadE));
+    flopenrc #(1) CSROpDE(.clk, .reset, .Stall(StallE), .Flush(FlushE), .D(CSROpD), .Q(CSROpE));
 
 
     flopenrc #(32) R1DE(.clk, .reset, .Stall(StallE), .Flush(FlushE), .D(R1D), .Q(R1E));
@@ -106,6 +108,7 @@ module datapath(
     mux4 #(32) aforwardmux(R1E, ResultW, IEUResultM, 'x, ForwardAE, FSrcAE);
     mux4 #(32) bforwardmux(R2E, ResultW, IEUResultM, 'x, ForwardBE, FSrcBE);
 
+    logic EqE, LtE, LtuE;
     cmp cmp(.R1(FSrcAE), .R2(FSrcBE), .Eq(EqE), .Lt(LtE), .Ltu(LtuE));
 
     executecontroller econ(.BranchE, .JumpE, .Funct3E, .EqE, .LtE, .LtuE, .PCSrcE);

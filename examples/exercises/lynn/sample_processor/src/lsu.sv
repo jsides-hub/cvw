@@ -15,6 +15,7 @@ module lsu(
         input   logic [2:0]     Funct3E,
         input   logic [4:0]     RdE,
         input   logic           LoadE,
+        input   logic           CSROpE,
 
         input   logic           StallM,
         input   logic           FlushM,
@@ -37,12 +38,14 @@ module lsu(
         output  logic [4:0]     RdW,
         output  logic [4:0]     RdM,
         output  logic           LoadM,
+        output  logic           CSROpM,
         output  logic           RegWriteM
     );
 
     logic [1:0]     ResultSrcM;
     logic [31:0]    PCM, PCW;
     flopenrc #(1) LoadEM(.clk, .reset, .Stall(StallM), .Flush(FlushM), .D(LoadE), .Q(LoadM));
+    flopenrc #(1) CSROpEM(.clk, .reset, .Stall(StallM), .Flush(FlushM), .D(CSROpE), .Q(CSROpM));
     flopenrc #(1) RegWriteEM(.clk, .reset, .Stall(StallM), .Flush(FlushM), .D(RegWriteE), .Q(RegWriteM));
     flopenrc #(2) ResultSrcEM(.clk, .reset, .Stall(StallM), .Flush(FlushM), .D(ResultSrcE), .Q(ResultSrcM));
     flopenrc #(1) MemEnEM(.clk, .reset, .Stall(StallM), .Flush(FlushM), .D(MemEnE), .Q(MemEnM));
