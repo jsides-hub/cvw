@@ -39,8 +39,8 @@ module ieu(
 
         output  logic [4:0]     Rd1D, Rd2D, Rd1E, Rd2E,
         output  logic           MemEnD,
-        output  logic           JumpE, BranchE, LoadD, LoadE
-
+        output  logic           JumpE, BranchE, LoadE,
+        output  logic [1:0]     ALUControlE
     );
     logic [2:0] Funct3D;
     logic ALUResultSrcD;
@@ -51,7 +51,7 @@ module ieu(
     logic [2:0] ImmSrcD;
     logic [1:0] ALUControlD;
     logic       MulD;
-    logic       JumpD, BranchD, AltSrcD;
+    logic       JumpD, BranchD, AltSrcD, LoadD;
 
 
     assign Funct3D = InstrD[14:12];
@@ -70,5 +70,5 @@ module ieu(
                 .ResultSrcW, .IEUResultM, .RdW,
                 .ReadDataW, .IEUResultW, .CSRResultW,
                 .PCE, .PCSrcE, .RegWriteE, .MemEnE, .WriteByteEnE, .Funct3E, .ResultSrcE, .RdE, .FSrcBE, .IEUAdrE, .IEUResultE, .ResultW,
-                .Rd1D, .Rd2D, .Rd1E, .Rd2E, .JumpE, .BranchE, .LoadE);
+                .Rd1D, .Rd2D, .Rd1E, .Rd2E, .JumpE, .BranchE, .LoadE, .ALUControlE);
 endmodule

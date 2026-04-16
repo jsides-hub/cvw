@@ -50,7 +50,8 @@ module datapath(
         output  logic [31:0]    ResultW,
 
         output  logic [4:0]     Rd1D, Rd2D, Rd1E, Rd2E,
-        output  logic           JumpE, BranchE, LoadE
+        output  logic           JumpE, BranchE, LoadE,
+        output  logic [1:0]     ALUControlE
 
     );
 
@@ -86,7 +87,6 @@ module datapath(
     flopenrc #(2) ALUSrcDE(.clk, .reset, .Stall(StallE), .Flush(FlushE), .D(ALUSrcD), .Q(ALUSrcE));
     logic [2:0] ImmSrcE;
     flopenrc #(3) ImmSrcDE(.clk, .reset, .Stall(StallE), .Flush(FlushE), .D(ImmSrcD), .Q(ImmSrcE));
-    logic [1:0] ALUControlE;
     flopenrc #(2) ALUControlDE(.clk, .reset, .Stall(StallE), .Flush(FlushE), .D(ALUControlD), .Q(ALUControlE));
     logic MulE;
     flopenrc #(1) MulDE(.clk, .reset, .Stall(StallE), .Flush(FlushE), .D(MulD), .Q(MulE));
@@ -106,7 +106,6 @@ module datapath(
     mux4 #(32) aforwardmux(R1E, ResultW, IEUResultM, 'x, ForwardAE, FSrcAE);
     mux4 #(32) bforwardmux(R2E, ResultW, IEUResultM, 'x, ForwardBE, FSrcBE);
 
-    //TODO: Fix flags
     cmp cmp(.R1(FSrcAE), .R2(FSrcBE), .Eq(EqE), .Lt(LtE), .Ltu(LtuE));
 
     executecontroller econ(.BranchE, .JumpE, .Funct3E, .EqE, .LtE, .LtuE, .PCSrcE);

@@ -5,18 +5,24 @@
 module csr(
         input   logic           clk,
         input   logic           reset,
-        input   logic[31:0]     Instr,
-        input   logic           BranchTaken,
-        input   logic           MemEn,
-        input   logic           WriteEn,
-        output  logic[31:0]     CSRResult
+        input   logic[11:0]     CSRVal,
+        input   logic[2:0]      Funct3E,
+        input   logic[1:0]      ResultSrcE,
+        input   logic[1:0]      ALUControlE,
+        input   logic           InstRetW,
+        input   logic           BranchEvalE,
+        input   logic           BranchTakenE,
+        input   logic           JumpE,
+        input   logic           WriteEnM,
+        input   logic           MemEnM,
+        output  logic[31:0]     CSRResultW
     );
-
     genvar i;
     logic CSROp;
-    logic[2:0] Funct3;
-    assign CSROp = (Instr[6:0] == 7'b1110011);
-    assign Funct3 = Instr[14:12];
+    assign CSROp = ResultSrcE == 2'b10;
+
+    logic ALUOp;
+    assign ALUOp = ALUControlE[0];
 
     // Updating counters
     logic [31:0] Events;
@@ -32,15 +38,15 @@ module csr(
     assign Events[0] = 1'b1; // Number of cycles
     assign Events[1] = 1'b1; // Time (= cycles)
     assign Events[2] = 1'b1; // Instructions retired (one cycle per)
-    assign Events[3] = ({Instr[14:12], Instr[6:0]} == 10'b0000110011); // Add instructions
-    assign Events[4] = (Instr[6:0] == 7'b1100011); // Branches evaluated
-    assign Events[5] = BranchTaken; // Branches taken
-    assign Events[6] = ({Instr[6:4], Instr[2:0]} == 6'b110111); // Jumps taken
-    assign Events[7] = WriteEn; // Memory writes
-    assign Events[8] = MemEn; // Memory ops
+    assign Events[3] = ALUOp & (Funct3E == 3'b000); // Add instructions
+    assign Events[4] = BranchEvalE; // Branches evaluated
+    assign Events[5] = BranchTakenE; // Branches taken
+    assign Events[6] = JumpE; // Jumps taken
+    assign Events[7] = WriteEnM; // Memory writes
+    assign Events[8] = MemEnM; // Memory ops
     assign Events[9] = CSROp; // CSR ops
     // assign Events[10] = 1'b1;
-    assign Events[10] = (({Instr[6], Instr[4:0]} == 6'b010011) & (Funct3 != 3'b000)); // Non-add ALU ops
+    assign Events[10] = ALUOp; // All ALU ops
     assign Events[11] = 1'b0;
     assign Events[12] = 1'b0;
     assign Events[13] = 1'b0;
@@ -67,19 +73,17 @@ module csr(
     // assign Events[5] = ;
 
     // Read value
-    logic [11:0] CSRVal;
     logic [11:0] Diff;
     logic [4:0]  Offset;
     logic [63:0] Val;
 
-    assign CSRVal = Instr[31:20];
     assign Diff = (CSRVal - 12'hC00);
     assign Offset = Diff[4:0];
     assign Val = CSRVals[Offset];
 
 
     always_comb
-        if(CSROp) CSRResult = (CSRVal < 12'hC80) ? Val[31:0] : Val[63:32];
-        else CSRResult = 'x;
+        if(CSROp) CSRResultW = (CSRVal < 12'hC80) ? Val[31:0] : Val[63:32];
+        else CSRResultW = 'x;
 
 endmodule

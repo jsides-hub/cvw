@@ -47,7 +47,7 @@ module controller(
             7'b0010111:         controls = 17'b1_100_11_0_0_0_00_0_0_0_0_1_0; // auipc
             7'b0110111:         controls = 17'b1_100_01_0_1_0_00_0_0_0_0_0_0; // lui
             7'b1100111:         controls = 17'b1_000_01_0_1_0_00_0_1_0_0_0_0; // jalr
-            7'b1110011:         controls = 17'b1_xxx_xx_x_x_0_10_0_0_0_0_0_0; // csr
+            7'b1110011:         controls = 17'b1_000_01_0_1_0_10_0_0_0_0_0_0; // csr
             default: begin
                 `ifdef DEBUG
                     controls = 17'bx_xxx_xx_x_x_x_xx_x_x_x_x_x_x; // non-implemented instruction
