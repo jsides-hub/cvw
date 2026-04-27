@@ -1,6 +1,6 @@
-// riscvsingle.sv
+// ifu.sv
 // RISC-V single-cycle processor
-// David_Harris@hmc.edu 2020 kacassidy@hmc.edu 2025
+//  jsides@hmc.edu 2026
 
 module ifu(
         input   logic           clk, reset,
@@ -24,9 +24,12 @@ module ifu(
 
         $display("[TB] ENTRY_ADDR = 0x%h", entry_addr);
     end
-    assign Target = IEUAdrE & {{31{1'b1}}, 1'b0};
+
+    // PC / Branch target evaluation
+    assign Target = IEUAdrE & {{31{1'b1}}, 1'b0}; // drop least significant bit
     mux2 #(32) pcmux(PCPlus4F, Target, PCSrcE, PCNextF);
 
+    // Fetching next PC
     always_ff @(posedge clk or posedge reset) begin
         if (reset)          PCF <= entry_addr;
         else if (~StallF)   PCF <= PCNextF;
@@ -34,6 +37,7 @@ module ifu(
 
     adder pcadd4(PCF, 32'd4, PCPlus4F);
 
+    // Decode stage flops
     flopenrc #(32) PCFD(.clk, .reset, .Stall(StallD), .Flush(FlushD), .D(PCF), .Q(PCD));
     flopenrc #(32) InstrFD(.clk, .reset, .Stall(StallD), .Flush(FlushD), .D(InstrF), .Q(InstrD));
 

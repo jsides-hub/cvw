@@ -1,6 +1,6 @@
 // riscvsingle.sv
 // RISC-V single-cycle processor
-// David_Harris@hmc.edu 2020
+// jsides@hmc.edu 2026
 
 `include "parameters.svh"
 
@@ -61,7 +61,6 @@ module controller(
                 `endif
             end
         endcase
-    // TODO: Align control signals
     assign {RegWriteD, ImmSrcD, ALUSrcD, ALUOpD, ALUResultSrcD, MemWriteD,
         ResultSrcD, BranchD, JumpD, MemEnD, MulD, AltSrcD, LoadD, CSROpD} = controls;
 

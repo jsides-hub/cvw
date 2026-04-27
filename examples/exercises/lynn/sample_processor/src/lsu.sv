@@ -1,6 +1,6 @@
-// riscvsingle.sv
+// lsu.sv
 // RISC-V single-cycle processor
-// David_Harris@hmc.edu 2020 kacassidy@hmc.edu 2025
+//  jsides@hmc.edu 2026
 
 module lsu(
         input   logic           clk, reset,
@@ -43,7 +43,8 @@ module lsu(
     );
 
     logic [1:0]     ResultSrcM;
-    logic [31:0]    PCM, PCW;
+    logic [31:0]    PCM, PCW;  // not used, just for ease of reading waveforms
+    // M stage flops
     flopenrc #(1) LoadEM(.clk, .reset, .Stall(StallM), .Flush(FlushM), .D(LoadE), .Q(LoadM));
     flopenrc #(1) CSROpEM(.clk, .reset, .Stall(StallM), .Flush(FlushM), .D(CSROpE), .Q(CSROpM));
     flopenrc #(1) RegWriteEM(.clk, .reset, .Stall(StallM), .Flush(FlushM), .D(RegWriteE), .Q(RegWriteM));
@@ -55,15 +56,15 @@ module lsu(
     flopenrc #(32) WriteDataEM(.clk, .reset, .Stall(StallM), .Flush(FlushM), .D(WriteDataE), .Q(WriteDataM));
     flopenrc #(3) Funct3EM(.clk, .reset, .Stall(StallM), .Flush(FlushM), .D(Funct3E), .Q(Funct3M));
     flopenrc #(5) RdEM(.clk, .reset, .Stall(StallM), .Flush(FlushM), .D(RdE), .Q(RdM));
-    flopenrc #(32) PCEM(.clk, .reset, .Stall(StallM), .Flush(FlushM), .D(PCE), .Q(PCM)); // not doing anything, just to visualize
+    flopenrc #(32) PCEM(.clk, .reset, .Stall(StallM), .Flush(FlushM), .D(PCE), .Q(PCM)); // not used, just for ease of reading waveforms
 
-
+    // W stage flops
     flopenrc #(1) RegWriteMW(.clk, .reset, .Stall(StallW), .Flush(FlushW), .D(RegWriteM), .Q(RegWriteW));
     flopenrc #(2) ResultSrcMW(.clk, .reset, .Stall(StallW), .Flush(FlushW), .D(ResultSrcM), .Q(ResultSrcW));
     flopenrc #(32) IEUResultMW(.clk, .reset, .Stall(StallW), .Flush(FlushW), .D(IEUResultM), .Q(IEUResultW));
     flopenrc #(32) ReadDataMW(.clk, .reset, .Stall(StallW), .Flush(FlushW), .D(ReadDataM), .Q(ReadDataW));
     flopenrc #(5) RdMW(.clk, .reset, .Stall(StallW), .Flush(FlushW), .D(RdM), .Q(RdW));
-    flopenrc #(32) PCMW(.clk, .reset, .Stall(StallW), .Flush(FlushW), .D(PCM), .Q(PCW)); // not doing anything, just to visualize
+    flopenrc #(32) PCMW(.clk, .reset, .Stall(StallW), .Flush(FlushW), .D(PCM), .Q(PCW)); // not used, just for ease of reading waveforms
 
 
 
