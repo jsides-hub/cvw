@@ -195,7 +195,7 @@
       "supported": true
     },
     "Zicsr": {
-      "supported": false
+      "supported": true
     },
     "Zifencei": {
       "supported": false
