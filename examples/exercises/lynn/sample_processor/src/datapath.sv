@@ -1,6 +1,6 @@
-// riscvsingle.sv
+// datapath.sv
 // RISC-V single-cycle processor
-// David_Harris@hmc.edu 2020
+// jsides@hmc.edu 2026
 
 module datapath(
         input   logic           clk, reset,
@@ -48,6 +48,7 @@ module datapath(
         output  logic [31:0]    FSrcBE,
         output  logic [31:0]    IEUAdrE,
         output  logic [31:0]    IEUResultE,
+        output  logic [31:0]    ImmExtE,
         output  logic [31:0]    ResultW,
 
         output  logic [4:0]     Rd1D, Rd2D, Rd1E, Rd2E,
@@ -56,7 +57,7 @@ module datapath(
 
     );
 
-    logic [31:0] ImmExtD, ImmExtE;
+    logic [31:0] ImmExtD;
     // logic [31:0] MulRes;
 
     // register file logic
@@ -68,8 +69,7 @@ module datapath(
 
     extend ext(.Instr(InstrD[31:7]), .ImmSrc(ImmSrcD), .ImmExt(ImmExtD));
 
-    // DE flop
-
+    // DE flops
     flopenrc #(3) Funct3DE(.clk, .reset, .Stall(StallE), .Flush(FlushE), .D(Funct3D), .Q(Funct3E));
     flopenrc #(32) PCDE(.clk, .reset, .Stall(StallE), .Flush(FlushE), .D(PCD), .Q(PCE));
 
@@ -108,11 +108,12 @@ module datapath(
     mux4 #(32) aforwardmux(R1E, ResultW, IEUResultM, 'x, ForwardAE, FSrcAE);
     mux4 #(32) bforwardmux(R2E, ResultW, IEUResultM, 'x, ForwardBE, FSrcBE);
 
+    // Branch evaluation
     logic EqE, LtE, LtuE;
     cmp cmp(.R1(FSrcAE), .R2(FSrcBE), .Eq(EqE), .Lt(LtE), .Ltu(LtuE));
-
     executecontroller econ(.BranchE, .JumpE, .Funct3E, .EqE, .LtE, .LtuE, .PCSrcE);
 
+    // ALU evaluation
     logic [31:0] SrcAE, SrcBE;
     mux2 #(32) srcamux(FSrcAE, PCE, ALUSrcE[1], SrcAE);
     mux2 #(32) srcbmux(FSrcBE, ImmExtE, ALUSrcE[0], SrcBE);
@@ -120,13 +121,13 @@ module datapath(
     logic [31:0] ALUResultE;
     alu alu(SrcAE, SrcBE, ALUControlE, Funct3E, ALUResultE, IEUAdrE);
 
+    // Next PC caluculations
     logic [31:0] PCLinkE;
     adder add4(PCE, 32'd4, PCLinkE);
-
     logic [31:0] AltResultE;
     mux2 #(32) altresultmux(ImmExtE, PCLinkE, JumpE, AltResultE);
-
     mux2 #(32) ieuresultmux(ALUResultE, AltResultE, ALUResultSrcE, IEUResultE);
 
+    // Result evalutation
     mux4 #(32) resultmux(IEUResultW, ReadDataW, CSRResultW, 'x, ResultSrcW, ResultW);
 endmodule

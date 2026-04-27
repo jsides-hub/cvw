@@ -1,6 +1,6 @@
 // riscvsingle.sv
 // RISC-V single-cycle processor
-// David_Harris@hmc.edu 2020 kacassidy@hmc.edu 2025
+// jsides@hmc.edu 2026
 
 `include "parameters.svh"
 
@@ -22,7 +22,7 @@ module riscvsingle (
     );
 
     logic [31:0]    InstrD, PCD, PCE, ReadDataW, CSRResultW, FSrcBE, ResultW;
-    logic [31:0]    IEUResultW, IEUResultM, IEUResultE, IEUAdrE;
+    logic [31:0]    IEUResultW, IEUResultM, IEUResultE, IEUAdrE, ImmExtE;
     logic           RegWriteE, RegWriteM, RegWriteW, MemEnE, MemEnD, PCSrcE;
     logic [1:0]     ResultSrcW, ResultSrcE, ALUControlE;
     logic [2:0]     Funct3E;
@@ -39,7 +39,7 @@ module riscvsingle (
     ieu ieu(.clk, .reset, .InstrD, .PCD,
             .ForwardAE, .ForwardBE, .StallE, .FlushE,
             .RegWriteW, .ResultSrcW, .IEUResultW, .ReadDataW, .CSRResultW, .RdW, .IEUResultM,
-            .RegWriteE, .ResultSrcE, .MemEnE, .IEUResultE, .IEUAdrE, .FSrcBE, .Funct3E, .RdE,
+            .RegWriteE, .ResultSrcE, .MemEnE, .IEUResultE, .IEUAdrE, .ImmExtE, .FSrcBE, .Funct3E, .RdE,
             .PCE, .PCSrcE, .WriteByteEnE, .ResultW,
             .Rd1D, .Rd2D, .Rd1E, .Rd2E, .MemEnD, .JumpE, .BranchE, .LoadE, .CSROpE, .ALUControlE);
     lsu lsu(.clk, .reset, .PCE, .RegWriteE, .ResultSrcE, .MemEnE, .WriteByteEnE, .IEUResultE, .IEUResultM, .IEUAdrE, .WriteDataE(FSrcBE), .Funct3E, .RdE, .LoadE, .CSROpE,
@@ -51,9 +51,9 @@ module riscvsingle (
     .Rd1D, .Rd2D, .Rd1E, .Rd2E, .RdE, .RdM, .RdW, .MemEnD, .MemEnE, .LoadE, .LoadM, .CSROpE, .CSROpM, .RegWriteM, .RegWriteW,
     .StallF, .StallD, .FlushD, .StallE, .FlushE, .StallM, .FlushM, .StallW, .FlushW, .ForwardAE, .ForwardBE);
 
-//TODO: InstRetW, BranchTakenE,
-    csr csr(.clk, .reset, .StallM, .FlushM, .StallW, .FlushW, .CSRVal(IEUResultE[11:0]), .Funct3E, .ResultSrcE, .ALUControlE,
-    .InstRetW(ResultW != 32'b0), .BranchEvalE(BranchE), .BranchTakenE(BranchE), .JumpE, .WriteEnM, .MemEnM, .CSRResultW);
+//TODO: Correct signals for InstRetW and BranchEvalE
+    csr csr(.clk, .reset, .StallM, .FlushM, .StallW, .FlushW, .CSRVal(ImmExtE[11:0]), .Funct3E, .ResultSrcE, .ALUControlE,
+    .InstRetW(ResultW != 32'b0), .BranchEvalE(BranchE), .BranchTakenE(BranchE&PCSrcE), .JumpE, .WriteEnM, .MemEnM, .CSRResultW);
 
     assign WriteEnM = |WriteByteEnM;
 endmodule

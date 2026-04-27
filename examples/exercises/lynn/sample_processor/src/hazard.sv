@@ -1,6 +1,6 @@
-// riscvsingle.sv
+// hazard.sv
 // RISC-V single-cycle processor
-// David_Harris@hmc.edu 2020 kacassidy@hmc.edu 2025
+// jsides@hmc.edu 2026
 
 `include "parameters.svh"
 
@@ -38,17 +38,14 @@ module hazard(
         forward forward(.Rd1E, .Rd2E, .RdM, .RdW, .RegWriteM, .RegWriteW, .ForwardAE, .ForwardBE);
 
 
-        assign StallF = (LoadE & (~LoadM)) | (CSROpE & (~CSROpM)); // Stalls on first instance of a load
-        // assign StallF = LoadE & (~LoadM);
-        assign StallD = (LoadE & (~LoadM)) | (CSROpE & (~CSROpM)); // Stalls on first instance of a load
-        // assign StallD = LoadE & (~LoadM);
-        assign StallE = (LoadE & (~LoadM)) | (CSROpE & (~CSROpM)); // Stalls on first instance of a load
-        // assign StallE = LoadE & (~LoadM);
+        assign StallF = (LoadE & (~LoadM)) | (CSROpE & (~CSROpM)); // Stalls on first instance of a (mem or csr) load
+        assign StallD = (LoadE & (~LoadM)) | (CSROpE & (~CSROpM)); // Stalls on first instance of a (mem or csr) load
+        assign StallE = (LoadE & (~LoadM)) | (CSROpE & (~CSROpM)); // Stalls on first instance of a (mem or csr) load
         assign StallM = 1'b0;
         assign StallW = 1'b0;
         assign FlushD = PCSrcE;
         assign FlushE = PCSrcE;
-        assign FlushM = (LoadE & LoadM) | (CSROpE & CSROpM); // Flushes later instance of a load (from stall)
+        assign FlushM = (LoadE & LoadM) | (CSROpE & CSROpM); // Flushes later instance of a load (duplicated from stall)
         assign FlushW = 1'b0;
 
 endmodule

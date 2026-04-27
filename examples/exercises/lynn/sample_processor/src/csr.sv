@@ -29,10 +29,10 @@ module csr(
     assign ALUOp = ALUControlE[0];
 
     // Updating counters
-    logic [31:0] Events;
-    logic [63:0] CSRVals[31:0];
+    logic [15:0] Events;
+    logic [63:0] CSRVals[15:0];
 
-    for(i = 0; $unsigned(i) < 32; i=i+1) begin
+    for(i = 0; $unsigned(i) < 16; i=i+1) begin
         always_ff @(posedge clk or posedge reset) begin
             if (reset)          CSRVals[i] <= '0;
             else                CSRVals[i] <= CSRVals[i] + {{63{1'b0}}, Events[i]};
@@ -56,39 +56,19 @@ module csr(
     assign Events[13] = 1'b0;
     assign Events[14] = 1'b0;
     assign Events[15] = 1'b0;
-    assign Events[16] = 1'b0;
-    assign Events[17] = 1'b0;
-    assign Events[18] = 1'b0;
-    assign Events[19] = 1'b0;
-    assign Events[20] = 1'b0;
-    assign Events[21] = 1'b0;
-    assign Events[22] = 1'b0;
-    assign Events[23] = 1'b0;
-    assign Events[24] = 1'b0;
-    assign Events[25] = 1'b0;
-    assign Events[26] = 1'b0;
-    assign Events[27] = 1'b0;
-    assign Events[28] = 1'b0;
-    assign Events[29] = 1'b0;
-    assign Events[30] = 1'b0;
-    assign Events[31] = 1'b0;
-
-
-    // assign Events[5] = ;
 
     // Read value
     logic [11:0] Diff;
-    logic [4:0]  Offset;
+    logic [3:0]  Offset;
     logic [63:0] Val;
     logic [31:0] CSRResultE, CSRResultM;
 
-    assign Diff = (CSRVal - 12'hC00);
-    assign Offset = Diff[4:0];
+    assign Offset = CSRVal[3:0];
     assign Val = CSRVals[Offset];
 
 
     always_comb
-        if(CSROp) CSRResultE = (CSRVal < 12'hC80) ? Val[31:0] : Val[63:32];
+        if(CSROp) CSRResultE = (CSRVal[7]) ? Val[63:32] : Val[31:0];
         else CSRResultE = 'x;
 
     flopenrc #(32) CSRResultEM(.clk, .reset, .Stall(StallM), .Flush(FlushM), .D(CSRResultE), .Q(CSRResultM));
