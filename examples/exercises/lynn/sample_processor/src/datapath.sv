@@ -45,7 +45,7 @@ module datapath(
         output  logic [2:0]     Funct3E,
         output  logic [1:0]     ResultSrcE,
         output  logic [4:0]     RdE,
-        output  logic [31:0]    FSrcBE,
+        output  logic [31:0]    FSrcAE, FSrcBE,
         output  logic [31:0]    IEUAdrE,
         output  logic [31:0]    IEUResultE,
         output  logic [31:0]    ImmExtE,
@@ -58,7 +58,6 @@ module datapath(
     );
 
     logic [31:0] ImmExtD;
-    // logic [31:0] MulRes;
 
     // register file logic
     assign Rd1D = InstrD[19:15];
@@ -104,7 +103,6 @@ module datapath(
 
 
     // ALU logic
-    logic [31:0] FSrcAE;
     mux4 #(32) aforwardmux(R1E, ResultW, IEUResultM, 'x, ForwardAE, FSrcAE);
     mux4 #(32) bforwardmux(R2E, ResultW, IEUResultM, 'x, ForwardBE, FSrcBE);
 

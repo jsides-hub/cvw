@@ -7,6 +7,7 @@ module lsu(
         input   logic [31:0]    PCE,
         input   logic           RegWriteE,
         input   logic [1:0]     ResultSrcE,
+        input   logic           MulE,
         input   logic           MemEnE,
         input   logic [3:0]     WriteByteEnE,
         input   logic [31:0]    IEUResultE,
@@ -27,6 +28,7 @@ module lsu(
         output   logic [31:0]   IEUResultM,
 
         output  logic [31:0]    WriteDataM,
+        output  logic           MulM,
         output  logic           MemEnM,
         output  logic [3:0]     WriteByteEnM,
         output  logic [2:0]     Funct3M,
@@ -49,6 +51,7 @@ module lsu(
     flopenrc #(1) CSROpEM(.clk, .reset, .Stall(StallM), .Flush(FlushM), .D(CSROpE), .Q(CSROpM));
     flopenrc #(1) RegWriteEM(.clk, .reset, .Stall(StallM), .Flush(FlushM), .D(RegWriteE), .Q(RegWriteM));
     flopenrc #(2) ResultSrcEM(.clk, .reset, .Stall(StallM), .Flush(FlushM), .D(ResultSrcE), .Q(ResultSrcM));
+    flopenrc #(1) MulEM(.clk, .reset, .Stall(StallM), .Flush(FlushM), .D(MulE), .Q(MulM));
     flopenrc #(1) MemEnEM(.clk, .reset, .Stall(StallM), .Flush(FlushM), .D(MemEnE), .Q(MemEnM));
     flopenrc #(4) WriteByteEnEM(.clk, .reset, .Stall(StallM), .Flush(FlushM), .D(WriteByteEnE), .Q(WriteByteEnM));
     flopenrc #(32) IEUResultEM(.clk, .reset, .Stall(StallM), .Flush(FlushM), .D(IEUResultE), .Q(IEUResultM));

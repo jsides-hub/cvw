@@ -18,6 +18,7 @@ module hazard(
         input   logic           MemEnE,
         input   logic           LoadE,
         input   logic           LoadM,
+        input   logic           MulM,
         input   logic           CSROpE,
         input   logic           CSROpM,
         input   logic           RegWriteM,
