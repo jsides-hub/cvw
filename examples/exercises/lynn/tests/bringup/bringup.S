@@ -36,6 +36,8 @@
     .globl return_or_test
     .globl return_and_test
     .globl return_sub_test
+    .globl return_beq_test
+    .globl return_slt_test
     .globl return_sll_test
     .globl return_slli_test
     .globl return_srl_test
