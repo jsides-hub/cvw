@@ -18,6 +18,7 @@ module hazard(
         input   logic           MemEnE,
         input   logic           LoadE,
         input   logic           LoadM,
+        input   logic           MulE,
         input   logic           MulM,
         input   logic           CSROpE,
         input   logic           CSROpM,
@@ -36,17 +37,19 @@ module hazard(
         output  logic [1:0]     ForwardAE,
         output  logic [1:0]     ForwardBE
 );
+        logic MulHazardE;
         forward forward(.Rd1E, .Rd2E, .RdM, .RdW, .RegWriteM, .RegWriteW, .ForwardAE, .ForwardBE);
 
+        assign MulHazardE = MulE;
 
-        assign StallF = (LoadE & (~LoadM)) | (CSROpE & (~CSROpM)); // Stalls on first instance of a (mem or csr) load
-        assign StallD = (LoadE & (~LoadM)) | (CSROpE & (~CSROpM)); // Stalls on first instance of a (mem or csr) load
-        assign StallE = (LoadE & (~LoadM)) | (CSROpE & (~CSROpM)); // Stalls on first instance of a (mem or csr) load
+        assign StallF = (LoadE & (~LoadM)) | (CSROpE & (~CSROpM)) | (MulE & (~MulM)); // Stalls on first instance of a (mem or csr) load
+        assign StallD = (LoadE & (~LoadM)) | (CSROpE & (~CSROpM)) | (MulE & (~MulM)); // Stalls on first instance of a (mem or csr) load
+        assign StallE = (LoadE & (~LoadM)) | (CSROpE & (~CSROpM)) | (MulE & (~MulM)); // Stalls on first instance of a (mem or csr) load
         assign StallM = 1'b0;
         assign StallW = 1'b0;
         assign FlushD = PCSrcE;
         assign FlushE = PCSrcE;
-        assign FlushM = (LoadE & LoadM) | (CSROpE & CSROpM); // Flushes later instance of a load (duplicated from stall)
+        assign FlushM = (LoadE & LoadM) | (CSROpE & CSROpM) | (MulE & MulM); // Flushes later instance of a load (duplicated from stall)
         assign FlushW = 1'b0;
 
 endmodule

@@ -74,5 +74,5 @@ module ieu(
                 .ResultSrcW, .IEUResultM, .RdW,
                 .ReadDataW, .IEUResultW, .CSRResultW, .MulResW,
                 .PCE, .PCSrcE, .RegWriteE, .MemEnE, .WriteByteEnE, .Funct3E, .ResultSrcE, .RdE, .FSrcAE, .FSrcBE, .IEUAdrE, .IEUResultE, .ImmExtE, .ResultW,
-                .Rd1D, .Rd2D, .Rd1E, .Rd2E, .JumpE, .BranchE, .LoadE, .CSROpE, .ALUControlE);
+                .Rd1D, .Rd2D, .Rd1E, .Rd2E, .MulE, .JumpE, .BranchE, .LoadE, .CSROpE, .ALUControlE);
 endmodule

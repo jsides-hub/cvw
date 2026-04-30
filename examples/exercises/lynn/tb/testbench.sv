@@ -64,7 +64,9 @@ module testbench;
       //         MemEn
       //         );
       // $display("PC: %h \t Instr: %h", PC, Instr);
-      $display("PCF: %h, PCD: %h, PCE: %h, PCM: %h, PCW: %h", dut.ifu.PCF, dut.ieu.PCD, dut.ieu.dp.PCE, dut.lsu.PCM, dut.lsu.PCW);
+      // $display("PCF: %h, PCD: %h, PCE: %h, PCM: %h, PCW: %h", dut.ifu.PCF, dut.ieu.PCD, dut.ieu.dp.PCE, dut.lsu.PCM, dut.lsu.PCW);
+      // $display("MulE: %h, MulM: %h", dut.MulE, dut.MulM);
+      // $display("CSROpE: %h, CSROpM: %h", dut.CSROpE, dut.CSROpM);
       // $display("PCSrcE: %h", dut.ifu.PCSrcE);
       // $display("MemEn: %h, WriteEn: %h, DataAdr: %h, WriteByteEn: %h", MemEn, WriteEn, DataAdr, WriteByteEn);
 

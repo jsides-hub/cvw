@@ -53,7 +53,7 @@ module datapath(
         output  logic [31:0]    ResultW,
 
         output  logic [4:0]     Rd1D, Rd2D, Rd1E, Rd2E,
-        output  logic           JumpE, BranchE, LoadE, CSROpE,
+        output  logic           MulE, JumpE, BranchE, LoadE, CSROpE,
         output  logic [1:0]     ALUControlE
 
     );
@@ -89,7 +89,6 @@ module datapath(
     logic [2:0] ImmSrcE;
     flopenrc #(3) ImmSrcDE(.clk, .reset, .Stall(StallE), .Flush(FlushE), .D(ImmSrcD), .Q(ImmSrcE));
     flopenrc #(2) ALUControlDE(.clk, .reset, .Stall(StallE), .Flush(FlushE), .D(ALUControlD), .Q(ALUControlE));
-    logic MulE;
     flopenrc #(1) MulDE(.clk, .reset, .Stall(StallE), .Flush(FlushE), .D(MulD), .Q(MulE));
     flopenrc #(1) JumpDE(.clk, .reset, .Stall(StallE), .Flush(FlushE), .D(JumpD), .Q(JumpE));
     flopenrc #(1) BranchDE(.clk, .reset, .Stall(StallE), .Flush(FlushE), .D(BranchD), .Q(BranchE));

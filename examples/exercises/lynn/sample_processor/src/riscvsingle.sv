@@ -48,7 +48,7 @@ module riscvsingle (
             .RegWriteW, .ResultSrcW, .IEUResultW, .ReadDataW, .RdW, .RdM, .LoadM, .CSROpM, .RegWriteM);
 
     hazard hazard(.PCSrcE,
-    .Rd1D, .Rd2D, .Rd1E, .Rd2E, .RdE, .RdM, .RdW, .MemEnD, .MemEnE, .LoadE, .LoadM, .MulM, .CSROpE, .CSROpM, .RegWriteM, .RegWriteW,
+    .Rd1D, .Rd2D, .Rd1E, .Rd2E, .RdE, .RdM, .RdW, .MemEnD, .MemEnE, .LoadE, .LoadM, .MulE, .MulM, .CSROpE, .CSROpM, .RegWriteM, .RegWriteW,
     .StallF, .StallD, .FlushD, .StallE, .FlushE, .StallM, .FlushM, .StallW, .FlushW, .ForwardAE, .ForwardBE);
 
         //TODO: Correct signals for InstRetW and BranchEvalE
