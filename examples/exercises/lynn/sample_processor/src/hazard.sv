@@ -47,8 +47,8 @@ module hazard(
         assign StallE = (LoadE & (~LoadM)) | (CSROpE & (~CSROpM)) | (MulE & (~MulM)); // Stalls on first instance of a (mem or csr) load
         assign StallM = 1'b0;
         assign StallW = 1'b0;
-        assign FlushD = PCSrcE;
-        assign FlushE = PCSrcE;
+        assign FlushD = PCSrcE; // Branch taken
+        assign FlushE = PCSrcE; // Branch taken
         assign FlushM = (LoadE & LoadM) | (CSROpE & CSROpM) | (MulE & MulM); // Flushes later instance of a load (duplicated from stall)
         assign FlushW = 1'b0;
 
