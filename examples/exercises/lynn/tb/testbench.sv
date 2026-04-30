@@ -64,7 +64,7 @@ module testbench;
       //         MemEn
       //         );
       // $display("PC: %h \t Instr: %h", PC, Instr);
-      // $display("PCF: %h, PCD: %h, PCE: %h, PCM: %h, PCW: %h", dut.ifu.PCF, dut.ieu.PCD, dut.ieu.dp.PCE, dut.lsu.PCM, dut.lsu.PCW);
+      $display("PCF: %h, PCD: %h, PCE: %h, PCM: %h, PCW: %h", dut.ifu.PCF, dut.ieu.PCD, dut.ieu.dp.PCE, dut.lsu.PCM, dut.lsu.PCW);
       // $display("PCSrcE: %h", dut.ifu.PCSrcE);
       // $display("MemEn: %h, WriteEn: %h, DataAdr: %h, WriteByteEn: %h", MemEn, WriteEn, DataAdr, WriteByteEn);
 
@@ -83,9 +83,7 @@ module testbench;
       // $display("SrcA: %h", dut.ieu.dp.SrcA);
       // $display("SrcB: %h", dut.ieu.dp.SrcB);
 
-      // $display("Result: %h", dut.ieu.dp.Result);
 
-      // $display("Multiplication result: %h", dut.ieu.dp.MulRes);
 
       // $display("Multiplexer control: %h", dut.ieu.dp.ResultSrc);
 

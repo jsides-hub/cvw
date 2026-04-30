@@ -38,7 +38,7 @@ module riscvsingle (
             .PCD, .PCF, .InstrD);
     ieu ieu(.clk, .reset, .InstrD, .PCD,
             .ForwardAE, .ForwardBE, .StallE, .FlushE,
-            .RegWriteW, .ResultSrcW, .IEUResultW, .ReadDataW, .CSRResultW, .RdW, .IEUResultM,
+            .RegWriteW, .ResultSrcW, .IEUResultW, .ReadDataW, .CSRResultW, .MulResW, .RdW, .IEUResultM,
             .RegWriteE, .ResultSrcE, .MulE, .MemEnE, .IEUResultE, .IEUAdrE, .ImmExtE, .FSrcAE, .FSrcBE, .Funct3E, .RdE,
             .PCE, .PCSrcE, .WriteByteEnE, .ResultW,
             .Rd1D, .Rd2D, .Rd1E, .Rd2E, .MemEnD, .JumpE, .BranchE, .LoadE, .CSROpE, .ALUControlE);

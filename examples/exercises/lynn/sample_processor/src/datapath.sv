@@ -36,6 +36,7 @@ module datapath(
         input   logic [31:0]    ReadDataW,
         input   logic [31:0]    IEUResultW,
         input   logic [31:0]    CSRResultW,
+        input   logic [31:0]    MulResW,
 
         output  logic [31:0]    PCE,
         output  logic           PCSrcE,
@@ -127,5 +128,5 @@ module datapath(
     mux2 #(32) ieuresultmux(ALUResultE, AltResultE, ALUResultSrcE, IEUResultE);
 
     // Result evalutation
-    mux4 #(32) resultmux(IEUResultW, ReadDataW, CSRResultW, 'x, ResultSrcW, ResultW);
+    mux4 #(32) resultmux(IEUResultW, ReadDataW, CSRResultW, MulResW, ResultSrcW, ResultW);
 endmodule
